@@ -1,0 +1,40 @@
+"PlayerRanks":
+  "HERO":
+    "permissions":
+      - naurellia.hero
+  "LEGEND":
+    "permissions":
+      - naurellia.legend
+  "PREMIUM":
+    "permissions":
+      - naurellia.premium
+"StaffRanks":
+  "TEST":
+    "permissions":
+      - naurellia.test
+      - naurellia.mod
+  "HELPER":
+    "permissions":
+      - naurellia.staff
+      - naurellia.helper
+      - naurellia.mod
+  "MOD":
+    "permissions":
+      - naurellia.staff
+      - naurellia.moderator
+      - naurellia.mod
+      - naurellia.unmute
+      - naurellia.unban
+  "ADMIN":
+    "permissions":
+      - naurellia.staff
+      - naurellia.admin
+      - naurellia.mod
+      - naurellia.unmute
+      - naurellia.unban
+
+"Database":
+  - jdbc:mariadb://eu02-sql.pebblehost.com:3306/customer_414826_naurellia
+  - customer_414826_naurellia
+  - customer_414826_naurellia
+  - mUxSjize6Kcaaj3#u3lE
