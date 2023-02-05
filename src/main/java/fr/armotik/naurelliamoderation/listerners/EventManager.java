@@ -8,12 +8,17 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.server.TabCompleteEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -21,6 +26,12 @@ public class EventManager implements Listener {
 
     private final Logger logger = Logger.getLogger(EventManager.class.getName());
     private final World world = Bukkit.getWorld("world");
+    private final List<String> commandList = new ArrayList<>();
+
+    public EventManager() {
+
+        commandList.add("/warn");
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -52,6 +63,34 @@ public class EventManager implements Listener {
                 ));
 
                 player.spigot().sendMessage(msg);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerCommandPreProcess(PlayerCommandPreprocessEvent event) {
+
+        String message = event.getMessage();
+        Player player = event.getPlayer();
+
+        System.out.println(player.hasPermission("naurellia.staff"));
+
+        if (!player.hasPermission("naurellia.staff")) {
+
+            if (commandList.contains(message)) {
+
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void test(TabCompleteEvent event) {
+
+        if (!event.getSender().isOp()) {
+
+            if(event.getBuffer().startsWith("naurelliamoderation:")) {
+                event.setCancelled(true);
             }
         }
     }

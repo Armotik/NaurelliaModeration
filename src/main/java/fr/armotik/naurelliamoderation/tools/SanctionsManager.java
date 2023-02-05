@@ -672,4 +672,24 @@ public class SanctionsManager implements Listener {
 
         Database.close();
     }
+
+    /**
+     * Build the reason for infraction's commands
+     * @param args args
+     * @return reason
+     */
+    public static String reasonDefBuilder(String[] args) {
+
+        StringBuilder bc = new StringBuilder();
+
+        ArrayList<String> resList = new ArrayList<>(Arrays.asList(args));
+
+        resList.remove(0);
+
+        for (String part : resList) {
+            bc.append(part).append(" ");
+        }
+
+        return bc.toString();
+    }
 }

@@ -5,3 +5,7 @@ api-version: 1.19
 authors: [ Armotik ]
 description: Moderation plugin for NaurelliaCraft
 website: naurellia.com
+prefix: NaurelliaModeration
+commands:
+  warn:
+    description: warn a player

@@ -1,15 +1,22 @@
 package fr.armotik.naurelliamoderation;
 
+import fr.armotik.naurelliamoderation.commands.WarnCommand;
+import fr.armotik.naurelliamoderation.completers.StaffCommandCompleter;
 import fr.armotik.naurelliamoderation.listerners.EventManager;
 import fr.armotik.naurelliamoderation.listerners.PermissionManager;
 import fr.armotik.naurelliamoderation.tools.ChatFilter;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +29,7 @@ public final class NaurelliaModeration extends JavaPlugin {
     /**
      * @return plugin
      */
-    public static NaurelliaModeration getPlugin() {return plugin;};
+    public static NaurelliaModeration getPlugin() {return plugin;}
 
     /**
      * Plugin starts
@@ -35,6 +42,19 @@ public final class NaurelliaModeration extends JavaPlugin {
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
 
+        /*
+        Commands
+         */
+        Objects.requireNonNull(getCommand("warn")).setExecutor(new WarnCommand());
+
+        /*
+        Completer
+         */
+
+
+        /*
+        Tests
+         */
         Database.databaseTest();
         Database.close();
 
@@ -54,6 +74,7 @@ public final class NaurelliaModeration extends JavaPlugin {
         // Plugin shutdown logic
 
         FilesReader.writeOfflineInfractions();
+        Database.closeAll();
     }
 
     public static void moderationLoop() {

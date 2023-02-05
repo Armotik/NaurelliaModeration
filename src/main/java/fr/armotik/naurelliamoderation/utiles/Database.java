@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +34,8 @@ public class Database {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.setMinimumIdle(10);
+        config.setMaximumPoolSize(100);
+        config.setMaxLifetime(TimeUnit.SECONDS.toMillis(10));
         dataSource = new HikariDataSource(config);
     }
 
@@ -146,6 +149,7 @@ public class Database {
      * Close the data source
      */
     public static void closeAll() {
+
 
         if (dataSource == null) return;
 
