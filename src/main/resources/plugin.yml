@@ -9,3 +9,14 @@ prefix: NaurelliaModeration
 commands:
   warn:
     description: warn a player
+  tempmute:
+    description: tempmute a player
+  tempban:
+    description: tempban a player
+  unmute:
+    description: unmute a player
+  unban:
+    description: unban a player
+  test:
+    description: test command
+    permission: naurellia.admin

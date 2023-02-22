@@ -19,6 +19,10 @@ public class ExceptionsManager {
         }
     }
 
+    private ExceptionsManager(){
+        throw new IllegalStateException("Utility Class");
+    }
+
     /**
      * Handle SQL exceptions
      * @param e SQLException
@@ -59,6 +63,39 @@ public class ExceptionsManager {
     public static void parseExceptionLog(ParseException e) {
 
         logger.log(Level.SEVERE, "ParseException \nErrorOffset : " + e.getErrorOffset() + "\nMessage : " + e.getMessage());
+
+        getStackTrace(e.getStackTrace());
+    }
+
+    /**
+     * Handle NumberFormatException
+     * @param e NumberFormatException
+     */
+    public static void numberFormatExceptionLog(NumberFormatException e) {
+
+        logger.log(Level.SEVERE, "ParseException \nMessage : " + e.getMessage());
+
+        getStackTrace(e.getStackTrace());
+    }
+
+    /**
+     * Handle NoSuchFieldException
+     * @param e NoSuchFiledException
+     */
+    public static void noSuchFieldExceptionLog(NoSuchFieldException e) {
+
+        logger.log(Level.SEVERE, "NoSuchFieldException \nMessage : " + e.getMessage());
+
+        getStackTrace(e.getStackTrace());
+    }
+
+    /**
+     * Handle IllegalAccessException
+     * @param e IllegalAccessException
+     */
+    public static void illegalAccessExceptionLog(IllegalAccessException e) {
+
+        logger.log(Level.SEVERE, "IllegalAccessException \nMessage : " + e.getMessage());
 
         getStackTrace(e.getStackTrace());
     }

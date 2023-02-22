@@ -15,10 +15,11 @@ import org.bukkit.entity.Player;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class WarnCommand implements CommandExecutor {
+public class MuteCommand implements CommandExecutor {
     /**
      * Executes the given command, returning its success.
      * <br>
@@ -33,10 +34,12 @@ public class WarnCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        Logger logger = Logger.getLogger(WarnCommand.class.getName());
+        Logger logger = Logger.getLogger(MuteCommand.class.getName());
 
         if (!(sender instanceof Player)) return false;
+
+        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/mute <player> <reason>")));
 
         Player player = ((Player) sender).getPlayer();
 
@@ -48,15 +51,12 @@ public class WarnCommand implements CommandExecutor {
 
         if (args.length == 0) {
 
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
-            msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
-
             player.spigot().sendMessage(msg);
             return false;
         }
 
         String reason;
-        if (args.length == 1) {
+        if (args.length == 2) {
             reason = null;
         } else {
             reason = SanctionsManager.reasonDefBuilder(args, 1);
@@ -66,7 +66,7 @@ public class WarnCommand implements CommandExecutor {
 
         if (res == null) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> WarnCommand : onCommand ERROR - res == null");
+            logger.log(Level.WARNING, "[NaurelliaModeration] -> MuteCommand : onCommand ERROR - res == null");
             Database.close();
             return false;
         }
@@ -75,14 +75,11 @@ public class WarnCommand implements CommandExecutor {
 
             if (!res.next()) {
 
-                TextComponent msg = new TextComponent(Louise.playerNotFound());
-                msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
-
                 player.spigot().sendMessage(msg);
                 return false;
             }
 
-            SanctionsManager.warn(player, UUID.fromString(res.getString("uuid")), reason);
+            SanctionsManager.mute(player, UUID.fromString(res.getString("uuid")), reason);
             Database.close();
             return true;
         } catch (SQLException e) {

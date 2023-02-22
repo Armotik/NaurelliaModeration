@@ -63,6 +63,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>minecraft-repo</id>
+            <url>https://libraries.minecraft.net/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -113,5 +117,18 @@
             <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>1.5.25</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 </project>

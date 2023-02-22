@@ -277,6 +277,7 @@ public class SanctionsManager implements Listener {
          */
         if (!target.isOnline()) {
             staff.sendMessage(Louise.playerNotFound());
+            return;
         }
 
         /*
@@ -535,6 +536,8 @@ public class SanctionsManager implements Listener {
      */
     public static void checkInfractions(Player target) {
 
+        if (!target.isOnline()) return;
+
         if (!offlineInfractionMessages.isEmpty() && offlineInfractionMessages.containsKey(target.getUniqueId())) {
 
             TextComponent msg = new TextComponent(offlineInfractionMessages.get(target.getUniqueId()));
@@ -676,15 +679,19 @@ public class SanctionsManager implements Listener {
     /**
      * Build the reason for infraction's commands
      * @param args args
+     * @param rmIndex index to remove
      * @return reason
      */
-    public static String reasonDefBuilder(String[] args) {
+    public static String reasonDefBuilder(String[] args, int rmIndex) {
 
         StringBuilder bc = new StringBuilder();
 
         ArrayList<String> resList = new ArrayList<>(Arrays.asList(args));
 
-        resList.remove(0);
+        while (rmIndex >= 0) {
+            rmIndex--;
+            resList.remove(0);
+        }
 
         for (String part : resList) {
             bc.append(part).append(" ");
