@@ -19,6 +19,11 @@ import java.util.UUID;
 
 public class GuiManager implements Listener {
 
+    /**
+     * Init mod GUI and open it
+     * @param player who opened the inventory
+     * @param targetUUID for who the inventory is open
+     */
     public static void modGui(Player player, UUID targetUUID) {
 
         Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Mod Menu : " + Bukkit.getOfflinePlayer(targetUUID).getName());
@@ -29,9 +34,14 @@ public class GuiManager implements Listener {
         player.openInventory(inv);
     }
 
+    /**
+     * Init the second page of mod GUI and open it
+     * @param player who opened the inventory
+     * @param targetUUID for who the inventory is open
+     */
     public static void modGui2(Player player, UUID targetUUID) {
 
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Mod Menu : " + Bukkit.getOfflinePlayer(targetUUID).getName());
+        Inventory inv = Bukkit.createInventory(null, 54, "§6Mod Menu : " + Bukkit.getOfflinePlayer(targetUUID).getName());
         ItemsModGui2 itemsGUIS = new ItemsModGui2(inv);
 
         itemsGUIS.itemsModGui2();
@@ -39,13 +49,18 @@ public class GuiManager implements Listener {
         player.openInventory(inv);
     }
 
+    /**
+     * Create custom head by using texture URL
+     * @param textureURL texture URL
+     * @return ItemStack - New Head
+     */
     public static ItemStack headFactory(String textureURL) {
 
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", textureURL));
-        Field profileField = null;
+        Field profileField;
         try {
             assert meta != null;
             profileField = meta.getClass().getDeclaredField("profile");
