@@ -14,7 +14,7 @@
 <ins>This plugin manages the incoming message sent :</ins>
 - Checks for inappropriate language in the message
 
-<ins>CThis plugin includes a moderation interface with predefined sanctions</ins>
+<ins>This plugin includes a moderation interface with predefined sanctions</ins>
 
 In order to reduce the carbon footprint of the program, all Exceptions are managed in the same class. Moreover, tests to evaluate the carbon footprint of the plugin are performed before each commit. This plugin tries to follow the Responsible Digital Charter of the Institut du Numérique Responsable `https://institutnr.org/charte-numerique-responsable` 
 
