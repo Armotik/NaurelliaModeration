@@ -17,6 +17,10 @@ commands:
     description: unmute a player
   unban:
     description: unban a player
+  moderation:
+    description: open the moderation GUI
+    aliases:
+      - mod
   test:
     description: test command
     permission: naurellia.admin

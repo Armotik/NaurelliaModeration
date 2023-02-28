@@ -1,10 +1,7 @@
 package fr.armotik.naurelliamoderation;
 
 import fr.armotik.naurelliamoderation.commands.*;
-import fr.armotik.naurelliamoderation.listerners.EventManager;
-import fr.armotik.naurelliamoderation.listerners.GuiManager;
-import fr.armotik.naurelliamoderation.listerners.PermissionManager;
-import fr.armotik.naurelliamoderation.listerners.ChatFilter;
+import fr.armotik.naurelliamoderation.listerners.*;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
@@ -44,6 +41,7 @@ public final class NaurelliaModeration extends JavaPlugin {
         Objects.requireNonNull(getCommand("tempban")).setExecutor(new TempbanCommand());
         Objects.requireNonNull(getCommand("unmute")).setExecutor(new UnMuteCommand());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new UnBanCommand());
+        Objects.requireNonNull(getCommand("moderation")).setExecutor(new ModerationCommand());
         Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
 
         /*
@@ -65,8 +63,9 @@ public final class NaurelliaModeration extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ChatFilter(), this);
         this.getServer().getPluginManager().registerEvents(new SanctionsManager(), this);
         this.getServer().getPluginManager().registerEvents(new GuiManager(), this);
+        this.getServer().getPluginManager().registerEvents(new ConnectionsManager(), this);
 
-        logger.log(Level.INFO, "[NaurelliaCore] -> Successfully loaded NaurelliaCore");
+        logger.log(Level.INFO, "[NaurelliaModeration] -> Successfully loaded NaurelliaModeration");
     }
 
     @Override
@@ -74,6 +73,7 @@ public final class NaurelliaModeration extends JavaPlugin {
         // Plugin shutdown logic
 
         FilesReader.writeOfflineInfractions();
+        //TODO Save Connections
         Database.closeAll();
     }
 

@@ -2,6 +2,8 @@ package fr.armotik.naurelliamoderation.utiles;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -96,6 +98,17 @@ public class ExceptionsManager {
     public static void illegalAccessExceptionLog(IllegalAccessException e) {
 
         logger.log(Level.SEVERE, "IllegalAccessException \nMessage : " + e.getMessage());
+
+        getStackTrace(e.getStackTrace());
+    }
+
+    /**
+     * Handle UnknownHostException
+     * @param e UnknownHostException
+     */
+    public static void unknownHostExceptionLog(UnknownHostException e) {
+
+        logger.log(Level.SEVERE, "UnknownHostException \nMessage : " + e.getMessage());
 
         getStackTrace(e.getStackTrace());
     }

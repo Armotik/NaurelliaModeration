@@ -17,6 +17,7 @@ public class PermissionManager implements Listener {
 
     private static final Map<UUID, PermissionAttachment> playerPermissions = new HashMap<>();
     private static final Map<UUID, PermissionAttachment> staffPermissions = new HashMap<>();
+    private static final List<UUID> staffList = new ArrayList<>();
     private static final Logger logger = Logger.getLogger(PermissionManager.class.getName());
 
     public static Map<UUID, PermissionAttachment> getPlayerPermissions() {
@@ -25,6 +26,10 @@ public class PermissionManager implements Listener {
 
     public static Map<UUID, PermissionAttachment> getStaffPermissions() {
         return staffPermissions;
+    }
+
+    public static List<UUID> getStaffList() {
+        return staffList;
     }
 
     /**
