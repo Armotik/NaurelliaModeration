@@ -36,13 +36,13 @@ public final class NaurelliaModeration extends JavaPlugin {
         /*
         Commands
          */
+        // TODO : Gestion des ATL et des comptes sur une seule ip
         Objects.requireNonNull(getCommand("warn")).setExecutor(new WarnCommand());
         Objects.requireNonNull(getCommand("tempmute")).setExecutor(new TempmuteCommand());
         Objects.requireNonNull(getCommand("tempban")).setExecutor(new TempbanCommand());
         Objects.requireNonNull(getCommand("unmute")).setExecutor(new UnMuteCommand());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new UnBanCommand());
         Objects.requireNonNull(getCommand("moderation")).setExecutor(new ModerationCommand());
-        Objects.requireNonNull(getCommand("test")).setExecutor(new TestCommand());
 
         /*
         Completer
@@ -59,13 +59,14 @@ public final class NaurelliaModeration extends JavaPlugin {
         Event Listeners
          */
         this.getServer().getPluginManager().registerEvents(new EventManager(), this);
-        this.getServer().getPluginManager().registerEvents(new PermissionManager(), this);
         this.getServer().getPluginManager().registerEvents(new ChatFilter(), this);
         this.getServer().getPluginManager().registerEvents(new SanctionsManager(), this);
         this.getServer().getPluginManager().registerEvents(new GuiManager(), this);
         this.getServer().getPluginManager().registerEvents(new ConnectionsManager(), this);
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> Successfully loaded NaurelliaModeration");
+
+        moderationLoop();
     }
 
     @Override
@@ -85,6 +86,6 @@ public final class NaurelliaModeration extends JavaPlugin {
                 SanctionsManager.unMuteDetector();
                 SanctionsManager.unBanDetector();
             }
-        }, 0, TimeUnit.MINUTES.toMillis(5)); //5m
+        }, 0, TimeUnit.SECONDS.toMillis(30)); //5m
     }
 }

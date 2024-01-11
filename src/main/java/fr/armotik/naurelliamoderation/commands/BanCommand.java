@@ -9,8 +9,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +27,6 @@ public class BanCommand {
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/ban<ip> <player> <reason>")));
 
         assert player != null;
-        if (!player.hasPermission("naurellia.admin")) {
-            player.sendMessage(Louise.permissionMissing());
-            return;
-        }
 
         if (args.length == 0) {
 
@@ -43,35 +41,36 @@ public class BanCommand {
             reason = SanctionsManager.reasonDefBuilder(args, 1);
         }
 
-        ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
+        try (Connection conn = Database.getConnection();
+        ) {
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet result = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+            ){
 
-        if (res == null) {
+                if (result == null) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> BanCommand : onCommand ERROR - res == null");
-            Database.close();
-            return;
-        }
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> BanCommand : onCommand ERROR - res == null");
+                    return;
+                }
 
-        try {
+                if (!result.next()) {
 
-            if (!res.next()) {
+                    player.spigot().sendMessage(msg);
+                    return;
+                }
 
-                player.spigot().sendMessage(msg);
-                return;
+                if (ip) {
+
+                    SanctionsManager.banip(player, UUID.fromString(result.getString("uuid")), reason);
+                } else {
+
+                    SanctionsManager.ban(player, UUID.fromString(result.getString("uuid")), reason);
+                }
+
             }
-
-            if (ip) {
-
-                SanctionsManager.banip(player, UUID.fromString(res.getString("uuid")), reason);
-            } else {
-
-                SanctionsManager.ban(player, UUID.fromString(res.getString("uuid")), reason);
-            }
-
-            Database.close();
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
         }
     }
 }

@@ -25,18 +25,27 @@ public class Database {
     }
 
     private static void init() {
-        HikariConfig config = new HikariConfig();
-        config.setDriverClassName("org.mariadb.jdbc.Driver");
-        config.setJdbcUrl(databaseStringList.get(0));
-        config.setUsername(databaseStringList.get(1));
-        config.setPassword(databaseStringList.get(3));
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.setMinimumIdle(10);
-        config.setMaximumPoolSize(100);
-        config.setMaxLifetime(30000L);
-        dataSource = new HikariDataSource(config);
+
+        if (dataSource != null && !dataSource.isClosed()) return;
+
+        try {
+
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(databaseStringList.get(0));
+            config.setUsername(databaseStringList.get(1));
+            config.setPassword(databaseStringList.get(2));
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            config.setMinimumIdle(10);
+            config.setMaximumPoolSize(100);
+            config.setMaxLifetime(30000L);
+
+            dataSource = new HikariDataSource(config);
+        } catch (Exception e) {
+
+            logger.severe("Error initializing the database connection pool \n" + e);
+        }
     }
 
     /**
@@ -46,24 +55,14 @@ public class Database {
      */
     public static Connection getConnection() {
 
-        if (dataSource == null || dataSource.isClosed()) init();
-
-        Connection conn = connection.get();
+        init();
 
         try {
-
-            if (conn == null) {
-
-                conn = dataSource.getConnection();
-                connection.set(conn);
-            }
+            return dataSource.getConnection();
         } catch (SQLException e) {
-
             ExceptionsManager.sqlExceptionLog(e);
             return null;
         }
-
-        return conn;
     }
 
     /**

@@ -11,11 +11,15 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.ban.ProfileBanList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.profile.PlayerProfile;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,7 +36,7 @@ public class SanctionsManager implements Listener {
     private static final String DEFAULT_REASON = "§cNo reason given";
     private static final LocalDate LOCAL_DATE = LocalDate.now();
     private static final Date DATE = new Date();
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MM yyyy HH:mm");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss");
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Map<UUID, Date> bannedFromChat = readMuteInfractions();
     private static final Map<UUID, String> offlineInfractionMessages = FilesReader.readOfflineInfractions();
@@ -83,7 +87,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
                 "VALUES ('" + targetUUID + "','WARN','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
 
         if (req <= 0) {
@@ -148,7 +152,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
                 "VALUES ('" + targetUUID + "','TEMPMUTE','" + reason + "','" + staff.getUniqueId() + "'," + muteDays + ",'" + LOCAL_DATE.format(FORMATTER) + "','" + DATE_FORMAT.format(unMuteDate) + "');");
 
         if (req <= 0) {
@@ -217,7 +221,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, duration, infractionDate) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate) " +
                 "VALUES ('" + targetUUID + "','MUTE','" + reason + "','" + staff.getUniqueId() + "'," + null + ",'" + LOCAL_DATE.format(FORMATTER) + "');");
 
         if (req <= 0) {
@@ -285,7 +289,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
                 "VALUES ('" + target.getUniqueId() + "','KICK','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
 
         if (req <= 0) {
@@ -330,7 +334,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
                 "VALUES ('" + targetUUID + "','TEMPBAN','" + reason + "','" + staff.getUniqueId() + "'," + banDays + ",'" + LOCAL_DATE.format(FORMATTER) + "','" + DATE_FORMAT.format(unBanDays) + "');");
 
         if (req <= 0) {
@@ -350,8 +354,9 @@ public class SanctionsManager implements Listener {
             target.kickPlayer("§cYou have been banned \n\n§cREASON : §f§l" + reason + "\n§cUNBAN DATE : §f§l" + LOCAL_DATE.format(FORMATTER));
         }
 
-        Bukkit.getBanList(BanList.Type.NAME).addBan(Objects.requireNonNull(Bukkit.getOfflinePlayer(targetUUID).getName()), "\n\n§cBAN REASON : §f§l" + reason + "\n§cUNBAN DATE : §f§l" + LOCAL_DATE.format(FORMATTER) + "\n\n§cYou can appeal your ban in our Discord", unBanDays, staff.getName());
-
+        ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.PROFILE);
+        PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
+        profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n§cUNBAN DATE : §f§l" + LOCAL_DATE.format(FORMATTER) + "\n\n§cYou can appeal your ban in our Discord", unBanDays, staff.getName());
         staff.sendMessage(Louise.getName() + "§aPlayer successfully banned for : " + banDays + " days");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been banned until " + LOCAL_DATE.format(FORMATTER) + " by : " + staff.getName() + " for : " + reason);
@@ -375,7 +380,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
                 "VALUES ('" + targetUUID + "','BAN','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
 
         if (req <= 0) {
@@ -395,7 +400,9 @@ public class SanctionsManager implements Listener {
             target.kickPlayer("§cYou have been banned \n\n§cREASON : §f§l" + reason);
         }
 
-        Bukkit.getBanList(BanList.Type.NAME).addBan(Objects.requireNonNull(Bukkit.getOfflinePlayer(targetUUID).getName()), "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", null, staff.getName());
+        ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.PROFILE);
+        PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
+        profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", (Date) null, staff.getName());
 
         staff.sendMessage(Louise.getName() + "§aPlayer successfully banned");
 
@@ -419,7 +426,7 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO infractionsIG (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
                 "VALUES ('" + targetUUID + "','BANIP','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
 
         if (req <= 0) {
@@ -439,7 +446,10 @@ public class SanctionsManager implements Listener {
             target.kickPlayer("§cYou have been banned-ip \n\n§cREASON : §f§l" + reason);
         }
 
-        Bukkit.getBanList(BanList.Type.IP).addBan(Objects.requireNonNull(Bukkit.getOfflinePlayer(targetUUID).getName()), "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", null, staff.getName());
+        ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.IP);
+        PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
+        profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", (Date) null, staff.getName());
+
         staff.sendMessage(Louise.getName() + "§aPlayer successfully banned-ip");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been banned-ip " + " by : " + staff.getName() + " for : " + reason);
@@ -456,7 +466,7 @@ public class SanctionsManager implements Listener {
      */
     public static void unMute(Player staff, UUID targetUUID) {
 
-        int req = Database.executeUpdate("UPDATE infractionsIG SET infractionStatus=false WHERE targetUUID='" + targetUUID + "' AND (infractiontype='MUTE' OR infractiontype='TEMPMUTE') AND infractionstatus=true;");
+        int req = Database.executeUpdate("UPDATE Infractions SET infractionStatus=false WHERE targetUUID='" + targetUUID + "' AND (infractiontype='MUTE' OR infractiontype='TEMPMUTE') AND infractionstatus=true;");
 
         if (req <= 0) {
 
@@ -509,7 +519,7 @@ public class SanctionsManager implements Listener {
      */
     public static void unBan(Player staff, OfflinePlayer target) {
 
-        int req = Database.executeUpdate("UPDATE infractionsIG SET infractionStatus=false WHERE targetUUID='\" + target.getUniqueId() + \"' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
+        int req = Database.executeUpdate("UPDATE Infractions SET infractionStatus=false WHERE targetUUID='\" + target.getUniqueId() + \"' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
 
         if (req <= 0) {
 
@@ -519,7 +529,9 @@ public class SanctionsManager implements Listener {
             return;
         }
 
-        Bukkit.getBanList(BanList.Type.NAME).pardon(Objects.requireNonNull(target.getName()));
+        ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.PROFILE);
+        PlayerProfile playerProfile = target.getPlayerProfile();
+        profileBanList.pardon(playerProfile);
 
         if (staff != null) {
 
@@ -563,47 +575,47 @@ public class SanctionsManager implements Listener {
 
         Map<UUID, Date> mutes = new HashMap<>();
 
-        ResultSet res = Database.executeQuery("SELECT * FROM infractionsIG WHERE infractionType='MUTE' OR infractionType='TEMPMUTE'");
+        try (Connection conn = Database.getConnection()) {
 
-        if (res == null) {
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT * FROM Infractions WHERE infractionType='MUTE' OR infractionType='TEMPMUTE'");
+            ) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : readMuteInfractions ERROR - res == null");
-            Database.close();
-            return mutes;
-        }
+                if (res == null) {
 
-        try {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : readMuteInfractions ERROR - res == null");
+                    return mutes;
+                }
 
-            while (res.next()) {
+                while (res.next()) {
 
-                if (res.getBoolean("infractionStatus")) {
+                    if (res.getBoolean("infractionStatus")) {
 
-                    UUID targetUUID = UUID.fromString(res.getString("targetUUID"));
+                        UUID targetUUID = UUID.fromString(res.getString("targetUUID"));
 
-                    if (res.getString("endInfraction") == null) {
+                        if (res.getString("endInfraction") == null) {
 
-                        mutes.put(targetUUID, null);
-                    } else {
+                            mutes.put(targetUUID, null);
+                        } else {
 
-                        String endInfraction = res.getString("endInfraction");
+                            String endInfraction = res.getString("endInfraction");
 
-                        Date endInfractionDate = DATE_FORMAT.parse(endInfraction);
+                            Date endInfractionDate = DATE_FORMAT.parse(endInfraction);
 
-                        mutes.put(targetUUID, endInfractionDate);
+                            mutes.put(targetUUID, endInfractionDate);
+                        }
                     }
                 }
             }
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
             return mutes;
         } catch (ParseException e) {
             ExceptionsManager.parseExceptionLog(e);
-            Database.close();
             return mutes;
         }
 
-        Database.close();
         return mutes;
     }
 
@@ -628,52 +640,49 @@ public class SanctionsManager implements Listener {
      */
     public static void unBanDetector() {
 
-        ResultSet res = Database.executeQuery("SELECT targetuuid, endinfraction FROM infractionsIG\n" +
-                "WHERE infractionStatus=true AND (infractionType='BAN' OR infractionType='TEMPBAN')\n" +
-                "AND endInfraction IS NOT NULL;");
+        try (Connection connection = Database.getConnection()) {
 
-        if (res == null) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT targetuuid, endinfraction FROM Infractions\n" +
+                         "WHERE infractionStatus=true AND (infractionType='BAN' OR infractionType='TEMPBAN')\n" +
+                         "AND endInfraction IS NOT NULL;")) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unBanDetector ERROR - res == null");
-            Database.close();
-            return;
-        }
+                if (res == null) {
 
-        try {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unBanDetector ERROR - res == null");
+                    return;
+                }
 
-            while (res.next())  {
+                while (res.next())  {
 
-                String endInfraction = res.getString("endinfraction");
+                    String endInfraction = res.getString("endinfraction");
 
-                Date endInfractionDate = DATE_FORMAT.parse(endInfraction);
+                    Date endInfractionDate = DATE_FORMAT.parse(endInfraction);
 
-                if (endInfractionDate.before(DATE)) {
+                    if (endInfractionDate.before(DATE)) {
 
-                    UUID targetUUID = UUID.fromString(res.getString("targetuuid"));
+                        UUID targetUUID = UUID.fromString(res.getString("targetuuid"));
 
-                    int req = Database.executeUpdate("UPDATE infractionsIG SET infractionStatus=false WHERE targetUUID='" + targetUUID + "' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
+                        int req = Database.executeUpdate("UPDATE Infractions SET infractionStatus=false WHERE targetUUID='" + targetUUID + "' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
 
-                    if (req <= 0) {
+                        ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.PROFILE);
+                        PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
+                        profileBanList.pardon(playerProfile);
 
-                        logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unBanDetector ERROR - req <= 0");
-                        Database.close();
-                        return;
+                        if (req <= 0) {
+
+                            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unBanDetector ERROR - req <= 0");
+                            return;
+                        }
                     }
-
-                    Database.close();
                 }
             }
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
-            return;
         } catch (ParseException e) {
             ExceptionsManager.parseExceptionLog(e);
-            Database.close();
-            return;
         }
-
-        Database.close();
     }
 
     /**

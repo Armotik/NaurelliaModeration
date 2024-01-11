@@ -12,8 +12,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,31 +60,28 @@ public class UnMuteCommand implements CommandExecutor {
             return false;
         } else {
 
-            ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
-
-            if (res == null) {
-                logger.log(Level.WARNING, "unMuteCommand ERROR : res == null");
-                Database.close();
-                return false;
-            }
-
-            try {
+            try (Connection conn = Database.getConnection()) {
                 /*
                 IF THE DATABASE DO NOT FIND THE PLAYER
                  */
-                if (!res.next()) {
+                assert conn != null;
+                try (Statement statement = conn.createStatement();
+                     ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+                ) {
 
-                    TextComponent msg = new TextComponent(Louise.playerNotFound());
-                    msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unmute <player>")));
+                    if (res == null) {
+                        logger.log(Level.WARNING, "unMuteCommand ERROR : res == null");
+                        return false;
+                    }
 
-                    sender.spigot().sendMessage(msg);
-                    Database.close();
-                    return false;
+                    if (!res.next()) {
 
-                    /*
-                    IF THE DATABASE FIND THE PLAYER
-                     */
-                } else {
+                        TextComponent msg = new TextComponent(Louise.playerNotFound());
+                        msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unmute <player>")));
+
+                        sender.spigot().sendMessage(msg);
+                        return false;
+                    }
 
                     Player player = ((Player) sender).getPlayer();
                     UUID targetUUID = UUID.fromString(res.getString("uuid"));
@@ -90,19 +89,16 @@ public class UnMuteCommand implements CommandExecutor {
                     if (SanctionsManager.getBannedFromChat().containsKey(targetUUID)) {
 
                         SanctionsManager.unMute(player, targetUUID);
-                        Database.close();
                         return true;
                     } else {
 
                         assert player != null;
                         player.sendMessage(Louise.getName() + "§cPlayer not muted");
-                        Database.close();
                         return false;
                     }
                 }
             } catch (SQLException e) {
                 ExceptionsManager.sqlExceptionLog(e);
-                Database.close();
                 return false;
             }
         }

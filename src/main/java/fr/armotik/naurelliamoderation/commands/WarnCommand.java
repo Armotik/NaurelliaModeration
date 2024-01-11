@@ -12,8 +12,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,32 +64,33 @@ public class WarnCommand implements CommandExecutor {
             reason = SanctionsManager.reasonDefBuilder(args, 1);
         }
 
-        ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
+        try (Connection connection = Database.getConnection()) {
 
-        if (res == null) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+            ) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> WarnCommand : onCommand ERROR - res == null");
-            Database.close();
-            return false;
-        }
+                if (res == null) {
 
-        try {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> WarnCommand : onCommand ERROR - res == null");
+                    return false;
+                }
 
-            if (!res.next()) {
+                if (!res.next()) {
 
-                TextComponent msg = new TextComponent(Louise.playerNotFound());
-                msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
+                    TextComponent msg = new TextComponent(Louise.playerNotFound());
+                    msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
 
-                player.spigot().sendMessage(msg);
-                return false;
+                    player.spigot().sendMessage(msg);
+                    return false;
+                }
+
+                SanctionsManager.warn(player, UUID.fromString(res.getString("uuid")), reason);
+                return true;
             }
-
-            SanctionsManager.warn(player, UUID.fromString(res.getString("uuid")), reason);
-            Database.close();
-            return true;
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
             return false;
         }
     }

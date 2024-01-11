@@ -12,8 +12,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,11 +42,6 @@ public class ModerationCommand implements CommandExecutor {
         Logger logger = Logger.getLogger(ModerationCommand.class.getName());
 
         assert player != null;
-        if (!player.hasPermission("naurellia.staff")) {
-
-            player.sendMessage(Louise.permissionMissing());
-            return false;
-        }
 
         TextComponent msg = new TextComponent(Louise.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/mod <player>")));
@@ -54,31 +51,33 @@ public class ModerationCommand implements CommandExecutor {
             return false;
         }
 
-        ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
+        try (Connection conn = Database.getConnection()) {
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+            ) {
 
-        if (res == null) {
+                if (res == null) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> ModerationCommand : onCommand ERROR - res == null");
-            player.sendMessage(Louise.commandError());
-            Database.close();
-            return false;
-        }
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> ModerationCommand : onCommand ERROR - res == null");
+                    player.sendMessage(Louise.commandError());
+                    Database.close();
+                    return false;
+                }
 
-        try {
+                if (!res.next()) {
 
-            if (!res.next()) {
+                    player.sendMessage(Louise.playerNotFound());
+                    return false;
+                }
 
-                player.sendMessage(Louise.playerNotFound());
-                return false;
+                GuiManager.modGui(player, UUID.fromString(res.getString("uuid")));
+
             }
 
-            GuiManager.modGui(player, UUID.fromString(res.getString("uuid")));
-
-            Database.close();
             return true;
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
             return false;
         }
     }

@@ -2,7 +2,7 @@
 
 ## Moderation Plugin for NaurelliaCraft
 ### Author : Armotik
-### API Version 1.19.3
+### API Version 1.20.4
 
 ---
 

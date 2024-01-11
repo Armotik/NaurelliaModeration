@@ -5,8 +5,10 @@ import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -111,33 +113,32 @@ public class FilesReader {
 
     public static Map<UUID, InetAddress> readConnections() {
 
-        ResultSet res = Database.executeQuery("SELECT uuid, address FROM connections");
-
-        if (res == null) {
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> FilesReader : readConnections ERROR - res == null");
-            Database.close();
-            return null;
-        }
-
         Map<UUID, InetAddress> connections = new HashMap<>();
 
-        try {
+        try (Connection conn = Database.getConnection()) {
 
-            while (res.next()) {
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT uuid, address FROM Connections");
+            ) {
 
-                connections.put(UUID.fromString(res.getString("uuid")), InetAddress.getByName(res.getString("address")));
+                if (res == null) {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> FilesReader : readConnections ERROR - res == null");
+                    return null;
+                }
+
+                while (res.next()) {
+
+                    connections.put(UUID.fromString(res.getString("uuid")), InetAddress.getByName(res.getString("address")));
+                }
             }
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
             return null;
         } catch (UnknownHostException e) {
             ExceptionsManager.unknownHostExceptionLog(e);
-            Database.close();
             return null;
         }
-
-        Database.close();
 
         return connections;
     }

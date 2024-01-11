@@ -13,11 +13,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.UUID;
 
 public class GuiManager implements Listener {
+
+    private static final UUID RANDOM_UUID = UUID.randomUUID();
 
     /**
      * Init mod GUI and open it
@@ -56,23 +61,28 @@ public class GuiManager implements Listener {
      */
     public static ItemStack headFactory(String textureURL) {
 
+        PlayerProfile profile = getProfile(textureURL);
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new Property("textures", textureURL));
-        Field profileField;
-        try {
-            assert meta != null;
-            profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(meta, profile);
-        } catch (NoSuchFieldException e) {
-            ExceptionsManager.noSuchFieldExceptionLog(e);
-        } catch (IllegalAccessException e) {
-            ExceptionsManager.illegalAccessExceptionLog(e);
-        }
+        assert meta != null;
+        meta.setOwnerProfile(profile);
         item.setItemMeta(meta);
 
         return item;
+    }
+    public static PlayerProfile getProfile(String url) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(RANDOM_UUID);
+        PlayerTextures textures = profile.getTextures();
+        URL urlObject;
+
+        try {
+            urlObject = new URL(url);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        textures.setSkin(urlObject);
+        profile.setTextures(textures);
+        return profile;
     }
 }

@@ -14,8 +14,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -42,14 +44,6 @@ public class UnBanCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return false;
 
         /*
-          IF THE SENDER DO NOT HAVE THE PERMISSION
-         */
-        if (!sender.hasPermission("naurellia.admin")) {
-            sender.sendMessage(Louise.permissionMissing());
-            return false;
-        }
-
-        /*
         IF NO ARGUMENTS
          */
         if (args.length < 1) {
@@ -61,50 +55,49 @@ public class UnBanCommand implements CommandExecutor {
             return false;
         } else {
 
-            ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
-
-            if (res == null) {
-                logger.log(Level.WARNING, "unMuteCommand ERROR : res == null");
-                Database.close();
-                return false;
-            }
-
-            try {
+            try (Connection conn = Database.getConnection()){
                 /*
                 IF THE DATABASE DO NOT FIND THE PLAYER
                  */
-                if (!res.next()) {
+                assert conn != null;
 
-                    TextComponent msg = new TextComponent(Louise.playerNotFound());
-                    msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
+                try (Statement statement = conn.createStatement();
+                     ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+                ) {
 
-                    sender.spigot().sendMessage(msg);
-                    Database.close();
-                    return false;
+                    if (res == null) {
+                        logger.log(Level.WARNING, "unMuteCommand ERROR : res == null");
+                        Database.close();
+                        return false;
+                    }
 
-                    /*
-                    IF THE DATABASE FIND THE PLAYER
-                     */
-                } else {
+                    if (!res.next()) {
+
+                        TextComponent msg = new TextComponent(Louise.playerNotFound());
+                        msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
+
+                        sender.spigot().sendMessage(msg);
+                        return false;
+
+                    }
 
                     Player player = ((Player) sender).getPlayer();
                     UUID targetUUID = UUID.fromString(res.getString("uuid"));
 
-                    Bukkit.getBanList(BanList.Type.NAME).getBanEntries().forEach(banEntry -> {
+                    Bukkit.getBanList(BanList.Type.PROFILE).getEntries().forEach(banEntry -> {
 
                         if (Objects.requireNonNull(Bukkit.getOfflinePlayer(targetUUID).getName()).equalsIgnoreCase(banEntry.getTarget())) {
 
                             SanctionsManager.unBan(player, Bukkit.getOfflinePlayer(targetUUID));
-                            Database.close();
 
                         }
                     });
 
                     return true;
                 }
+
             } catch (SQLException e) {
                 ExceptionsManager.sqlExceptionLog(e);
-                Database.close();
                 return false;
             }
         }

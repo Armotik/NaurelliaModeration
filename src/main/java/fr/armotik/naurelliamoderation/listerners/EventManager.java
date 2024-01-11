@@ -2,6 +2,7 @@ package fr.armotik.naurelliamoderation.listerners;
 
 import fr.armotik.naurelliamoderation.Louise;
 import fr.armotik.naurelliamoderation.commands.BanCommand;
+import fr.armotik.naurelliamoderation.commands.KickCommand;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
@@ -12,7 +13,6 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,11 +20,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -42,10 +42,7 @@ public class EventManager implements Listener {
 
         Player player = event.getPlayer();
 
-        PermissionManager.setupPermissions(player);
-
         if (player.hasPlayedBefore()) {
-            PermissionManager.readPermissions(player);
             SanctionsManager.checkInfractions(player);
         }
 
@@ -79,7 +76,7 @@ public class EventManager implements Listener {
 
         for (String word : ChatFilter.blackListedWords) {
 
-            if (!player.hasPermission("naurellia.staff") && message.toLowerCase(Locale.ENGLISH).contains(word)) {
+            if (!player.hasPermission("naurellia.staff.helper") && message.toLowerCase(Locale.ENGLISH).contains(word)) {
 
                 event.setCancelled(true);
                 TextComponent msg = new TextComponent(Louise.chatFilter());
@@ -130,7 +127,7 @@ public class EventManager implements Listener {
         if (cmd.startsWith("/ban ")) {
             event.setCancelled(true);
 
-            if (!event.getPlayer().hasPermission("naurellia.admin")) {
+            if (!event.getPlayer().hasPermission("naurellia.staff.admin")) {
                 event.getPlayer().sendMessage(Louise.permissionMissing());
             } else {
 
@@ -145,7 +142,7 @@ public class EventManager implements Listener {
         if (cmd.startsWith("/ban-ip ")) {
             event.setCancelled(true);
 
-            if (!event.getPlayer().hasPermission("naurellia.admin")) {
+            if (!event.getPlayer().hasPermission("naurellia.staff.admin")) {
                 event.getPlayer().sendMessage(Louise.permissionMissing());
             } else {
 
@@ -160,7 +157,7 @@ public class EventManager implements Listener {
         if (cmd.startsWith("/kick ")) {
             event.setCancelled(true);
 
-            if (!event.getPlayer().hasPermission("naurellia.staff")) {
+            if (!event.getPlayer().hasPermission("naurellia.staff.helper")) {
                 event.getPlayer().sendMessage(Louise.permissionMissing());
             } else {
 
@@ -168,7 +165,6 @@ public class EventManager implements Listener {
                 Player staff = event.getPlayer();
 
                 new KickCommand(staff, args);
-                return;
             }
         }
     }
@@ -182,34 +178,38 @@ public class EventManager implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
-        if (player.hasPermission("naurellia.staff")) {
+        if (player.hasPermission("naurellia.staff.helper")) {
 
-            if (player.getOpenInventory().getTitle().startsWith("Mod Menu :")) {
+
+            if (player.getOpenInventory().getTitle().startsWith("§6Mod Menu :")) {
 
                 event.setCancelled(true);
 
                 ItemStack current = event.getCurrentItem();
                 OfflinePlayer target = null;
 
-                ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username='" + player.getOpenInventory().getTitle().split(" : ")[1] + "'");
+                try (Connection conn = Database.getConnection()) {
 
-                if (res == null) {
+                    System.out.println("test3");
 
-                    Database.close();
-                    logger.log(Level.WARNING, "[NaurelliaModeration] -> EventManager : onInventoryClick ERROR - res == null");
-                    return;
-                }
+                    assert conn != null;
+                    try (Statement statement = conn.createStatement();
+                         ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign='" + player.getOpenInventory().getTitle().split(" : ")[1] + "'");
+                    ) {
+                        if (res == null) {
 
-                try {
-                    if (res.next()) {
+                            logger.log(Level.WARNING, "[NaurelliaModeration] -> EventManager : onInventoryClick ERROR - res == null");
+                            return;
+                        }
 
-                        target = Bukkit.getOfflinePlayer(UUID.fromString(res.getString("uuid")));
-                        Database.close();
+                        if (res.next()) {
+
+                            target = Bukkit.getOfflinePlayer(UUID.fromString(res.getString("uuid")));
+                        }
                     }
                 } catch (SQLException e) {
 
                     ExceptionsManager.sqlExceptionLog(e);
-                    Database.close();
                     return;
                 }
 
@@ -220,6 +220,7 @@ public class EventManager implements Listener {
                 }
 
                 if (current.getType() == Material.PLAYER_HEAD) {
+
                     switch (Objects.requireNonNull(current.getItemMeta()).getDisplayName()) {
 
                         case "§bSpam" -> {
@@ -348,6 +349,16 @@ public class EventManager implements Listener {
 
                         case "§cPrevious Page" -> {
                             GuiManager.modGui(player, target.getUniqueId());
+                        }
+
+                        case "§cTEST MUTE" -> {
+                            SanctionsManager.tempmute(player, target.getUniqueId(), "TEST MUTE", TimeUnit.SECONDS.toMillis(10));
+                            player.getOpenInventory().close();
+                        }
+
+                        case "§cTEST BAN" -> {
+                            SanctionsManager.tempban(player, target.getUniqueId(), "TEST BAN", TimeUnit.SECONDS.toMillis(10));
+                            player.getOpenInventory().close();
                         }
                         default -> {}
                     }

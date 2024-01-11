@@ -104,11 +104,11 @@ public class ConnectionsManager implements Listener {
                 stringBuilder.append(str).append(" ");
             }
 
-            for (UUID uuid : PermissionManager.getStaffList()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
 
-                if (Bukkit.getOfflinePlayer(uuid).isOnline()) {
+                if (player.hasPermission("naurellia.staff.helper")) {
 
-                    Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(stringBuilder.toString());
+                    player.sendMessage(stringBuilder.toString());
                 }
             }
         }

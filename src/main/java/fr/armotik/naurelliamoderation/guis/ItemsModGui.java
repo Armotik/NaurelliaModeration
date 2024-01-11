@@ -17,8 +17,11 @@ public class ItemsModGui {
     }
 
     public void itemsModGui() {
+
+
+
         // BANS BLOCK
-        ItemStack banBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTBjMWI1ODRmMTM5ODdiNDY2MTM5Mjg1YjJmM2YyOGRmNjc4NzEyM2QwYjMyMjgzZDg3OTRlMzM3NGUyMyJ9fX0=");
+        ItemStack banBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/50c1b584f13987b466139285b2f3f28df6787123d0b32283d8794e3374e23");
 
         ItemMeta banBlockMeta = banBlock.getItemMeta();
         assert banBlockMeta != null;
@@ -26,7 +29,7 @@ public class ItemsModGui {
         banBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // MUTES BLOCK
-        ItemStack muteBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDljNDVhMjRhYWFiZjQ5ZTIxN2MxNTQ4MzIwNDg0OGE3MzU4MmFiYTdmYWUxMGVlMmM1N2JkYjc2NDgyZiJ9fX0=");
+        ItemStack muteBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/49c45a24aaabf49e217c15483204848a73582aba7fae10ee2c57bdb76482f");
 
         ItemMeta muteBlockMeta = muteBlock.getItemMeta();
         assert muteBlockMeta != null;
@@ -34,7 +37,7 @@ public class ItemsModGui {
         muteBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // WARNS BLOCK
-        ItemStack warnBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjY5YWQxYTg4ZWQyYjA3NGUxMzAzYTEyOWY5NGU0YjcxMGNmM2U1YjRkOTk1MTYzNTY3ZjY4NzE5YzNkOTc5MiJ9fX0=");
+        ItemStack warnBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/269ad1a88ed2b074e1303a129f94e4b710cf3e5b4d995163567f68719c3d9792");
 
         ItemMeta warnBlockMeta = warnBlock.getItemMeta();
         assert warnBlockMeta != null;
@@ -42,7 +45,7 @@ public class ItemsModGui {
         warnBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // SPAM BLOCK
-        ItemStack spamBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjc5NWI2NjE1N2I1ZDFlMDc1NzMzMWQ4ODk3NmZjYjYzMDlkZThkMDFiNTFlNDc5YjM5MGI2NGU2ZmU1NTIifX19");
+        ItemStack spamBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/6795b66157b5d1e0757331d88976fcb6309de8d01b51e479b390b64e6fe552");
 
         ItemMeta spamBlockMeta = spamBlock.getItemMeta();
         assert spamBlockMeta != null;
@@ -50,7 +53,7 @@ public class ItemsModGui {
         spamBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // SPAM BLOCK RELAPSE
-        ItemStack spamBlockRelapse = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThmNzkxNGU5OGQ5OGU5NGE3ZTNjZjk3MmNiNjZjNTNhNjZjZmEyNDMwNWQzNGIzMzNjYWU4MmRmZDRiZTQ1NSJ9fX0=");
+        ItemStack spamBlockRelapse = GuiManager.headFactory("http://textures.minecraft.net/texture/98f7914e98d98e94a7e3cf972cb66c53a66cfa24305d34b333cae82dfd4be455");
 
         ItemMeta spamBlockRelapseMeta = spamBlockRelapse.getItemMeta();
         assert spamBlockRelapseMeta != null;
@@ -58,7 +61,7 @@ public class ItemsModGui {
         spamBlockRelapseMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // CHAT FILTER BYPASS BLOCK
-        ItemStack filterBypassBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDU5M2Y5YjliZmMxYjIxMTA0MTFjN2FkN2RlMzYyY2JiZjM0OTY4MmMyNDQ5YmI1NDQ1MmFkOGM1ZjU1YzQyIn19fQ==");
+        ItemStack filterBypassBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/4593f9b9bfc1b2110411c7ad7de362cbbf349682c2449bb54452ad8c5f55c42");
 
         ItemMeta filerBypassBlockMeta = filterBypassBlock.getItemMeta();
         assert filerBypassBlockMeta != null;
@@ -66,7 +69,7 @@ public class ItemsModGui {
         filerBypassBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // DISCRIMINATION BLOCK
-        ItemStack discriminationBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQ2OGFlMzE1MGQ4MWU0YzBhOWQxNzJiZDg0YzRmZjczY2RjMGI4N2ZlZThlYzY2MTIxMzQ2OGQ1NDQ0ODMifX19");
+        ItemStack discriminationBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/ed68ae3150d81e4c0a9d172bd84c4ff73cdc0b87fee8ec661213468d544483");
 
         ItemMeta discriminationBlockMeta = discriminationBlock.getItemMeta();
         assert discriminationBlockMeta != null;
@@ -74,7 +77,7 @@ public class ItemsModGui {
         discriminationBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // TROLL BLOCK
-        ItemStack trollBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTJjM2IyZTYyMjcxMmIxNDk1ZmI5NWRmY2IwNWViMTQzYjJmMjY5N2U2ZjNjNGU0YTNkNjg1Y2YzMWQ0In19fQ==");
+        ItemStack trollBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/a2c3b2e622712b1495fb95dfcb05eb143b2f2697e6f3c4e4a3d685cf31d4");
 
         ItemMeta trollBlockMeta = trollBlock.getItemMeta();
         assert trollBlockMeta != null;
@@ -82,7 +85,7 @@ public class ItemsModGui {
         trollBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // GLITCH BLOCK
-        ItemStack glitchBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTg1MzYxMzc3MjE1ZTIxNGEzNWM5NmNiYWY5ZGI2NzIxMDVhZmFmYzk0OTRiYmY0YWU3MmFhNjczYzVmZTdjIn19fQ==");
+        ItemStack glitchBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/185361377215e214a35c96cbaf9db672105afafc9494bbf4ae72aa673c5fe7c");
 
         ItemMeta glitchBlockMeta = glitchBlock.getItemMeta();
         assert glitchBlockMeta != null;
@@ -90,7 +93,7 @@ public class ItemsModGui {
         glitchBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // FLOOD BLOCK
-        ItemStack floodBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAxYzFlMjliYWIyNzI0NzljNTI2ZjIxOGYwNTE1ODZjMjJmMjlkYzA5MjhiNmNhOThhZTE0YTNlMDdhZDkifX19");
+        ItemStack floodBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/301c1e29bab272479c526f218f051586c22f29dc0928b6ca98ae14a3e07ad9");
 
         ItemMeta floodBlockMeta = floodBlock.getItemMeta();
         assert floodBlockMeta != null;
@@ -98,7 +101,7 @@ public class ItemsModGui {
         floodBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // PUB BLOCK
-        ItemStack pubBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTY1ZjIzZGRjNmU4M2FiN2QwYzRhYTljNTc0NGFmN2I5NmJjNzM5YmM4M2E5NmNiMWYyYjE4ZDY3MWYifX19");
+        ItemStack pubBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/565f23ddc6e83ab7d0c4aa9c5744af7b96bc739bc83a96cb1f2b18d671f");
 
         ItemMeta pubBlockMeta = pubBlock.getItemMeta();
         assert pubBlockMeta != null;
@@ -106,7 +109,7 @@ public class ItemsModGui {
         pubBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // TOXICITY BLOCK
-        ItemStack toxicityBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzQ1MTg5N2Q3Zjc0N2E5MDFjMTgzYmZlZTJlZDE3NGYzNTY1NWM5NjZmOWFkZjZlMmM3NjMwYTAzYTgxNTViZCJ9fX0=");
+        ItemStack toxicityBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/c451897d7f747a901c183bfee2ed174f35655c966f9adf6e2c7630a03a8155bd");
 
         ItemMeta toxicityBlockMeta = toxicityBlock.getItemMeta();
         assert toxicityBlockMeta != null;
@@ -114,7 +117,7 @@ public class ItemsModGui {
         toxicityBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // HARASSMENT BLOCK
-        ItemStack harassmentBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjkyZGJjYjA0YTZkMzE1ODEzOGM5ZDYyZjIyODJhZTI4NTg0MTdjYmZlZmJmNjQ0NzY5NjVhN2Q3NjdkMzgifX19");
+        ItemStack harassmentBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/f92dbcb04a6d3158138c9d62f2282ae2858417cbfefbf64476965a7d767d38");
 
         ItemMeta harassmentBlockMeta = harassmentBlock.getItemMeta();
         assert harassmentBlockMeta != null;
@@ -122,7 +125,7 @@ public class ItemsModGui {
         harassmentBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // HARASSMENT BLOCK RELAPSE
-        ItemStack harassmentBlockRelapse = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ5ZTMzZDc0M2VlMzQyMjQzMzEyMjkxY2NkY2ZmZDdmY2NhNWJkYzhhNmE4NDU5ZWU4ZTYyY2U1N2FkZDcifX19");
+        ItemStack harassmentBlockRelapse = GuiManager.headFactory("http://textures.minecraft.net/texture/4d9e33d743ee342243312291ccdcffd7fcca5bdc8a6a8459ee8e62ce57add7");
 
         ItemMeta harassmentBlockRelapseMeta = harassmentBlockRelapse.getItemMeta();
         assert harassmentBlockRelapseMeta != null;
@@ -130,7 +133,7 @@ public class ItemsModGui {
         harassmentBlockRelapseMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // TOXICITY BLOCK RELAPSE
-        ItemStack toxicityBlockRelapse = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTJjM2IyZTYyMjcxMmIxNDk1ZmI5NWRmY2IwNWViMTQzYjJmMjY5N2U2ZjNjNGU0YTNkNjg1Y2YzMWQ0In19fQ==");
+        ItemStack toxicityBlockRelapse = GuiManager.headFactory("http://textures.minecraft.net/texture/a2c3b2e622712b1495fb95dfcb05eb143b2f2697e6f3c4e4a3d685cf31d4");
 
         ItemMeta toxicityBlockRelapseMeta = toxicityBlockRelapse.getItemMeta();
         assert toxicityBlockRelapseMeta != null;
@@ -138,7 +141,7 @@ public class ItemsModGui {
         toxicityBlockRelapseMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // ALT ACCOUNT BLOCK
-        ItemStack altBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTFkMzgzNDAxZjc3YmVmZmNiOTk4YzJjZjc5YjdhZmVlMjNmMThjNDFkOGE1NmFmZmVkNzliYjU2ZTIyNjdhMyJ9fX0=");
+        ItemStack altBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/51d383401f77beffcb998c2cf79b7afee23f18c41d8a56affed79bb56e2267a3");
 
         ItemMeta altBlockMeta = altBlock.getItemMeta();
         assert altBlockMeta != null;
@@ -146,7 +149,7 @@ public class ItemsModGui {
         altBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // ALT USAGE BLOCK
-        ItemStack altUsageBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTFkMzgzNDAxZjc3YmVmZmNiOTk4YzJjZjc5YjdhZmVlMjNmMThjNDFkOGE1NmFmZmVkNzliYjU2ZTIyNjdhMyJ9fX0=");
+        ItemStack altUsageBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/51d383401f77beffcb998c2cf79b7afee23f18c41d8a56affed79bb56e2267a3");
 
         ItemMeta altUsageBlockMeta = altUsageBlock.getItemMeta();
         assert altUsageBlockMeta != null;
@@ -154,7 +157,7 @@ public class ItemsModGui {
         altUsageBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // GRIEFING BLOCK
-        ItemStack griefingBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzhhMzMyNGM3N2ZkY2NkNTk3Nzc0MzA0YmJkYTE1NTE3ZWEyMzU5ZGU1Mzg5N2FlZDA5NTI4ZDFjNmVjOSJ9fX0=");
+        ItemStack griefingBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/78a3324c77fdccd597774304bbda15517ea2359de53897aed09528d1c6ec9");
 
         ItemMeta griefingBlockMeta = griefingBlock.getItemMeta();
         assert griefingBlockMeta != null;
@@ -162,7 +165,7 @@ public class ItemsModGui {
         griefingBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // INAPPROPRIATE DISCUSSION BLOCK
-        ItemStack inapDiscussionBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmNlZWUyMmQ3MzE5MTRmNjcwOTZiNzRlNWVhZDRkZDg0YzVlOGViOTJiNTQzOThlNjFlOGIyN2JmYjM3In19fQ==");
+        ItemStack inapDiscussionBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/bceee22d731914f67096b74e5ead4dd84c5e8eb92b54398e61e8b27bfb37");
 
         ItemMeta inapDiscussionBlockMeta = inapDiscussionBlock.getItemMeta();
         assert inapDiscussionBlockMeta != null;
@@ -170,7 +173,7 @@ public class ItemsModGui {
         inapDiscussionBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // NON ENGLISH CHATTING BLOCK
-        ItemStack nonEnglishBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQ0NWY1YzJjZWZkZTQzNjdiNzU4ZmQzYjE5ZDc0NmI5YzRhOGNhZjE0ZjljZjc3YzU0MGMyMjNlNWQ5YTEifX19");
+        ItemStack nonEnglishBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/fd45f5c2cefde4367b758fd3b19d746b9c4a8caf14f9cf77c540c223e5d9a1");
 
         ItemMeta nonEnglishBlockMeta = nonEnglishBlock.getItemMeta();
         assert nonEnglishBlockMeta != null;
@@ -178,7 +181,7 @@ public class ItemsModGui {
         nonEnglishBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         // NEXT BLOCK
-        ItemStack nextBlock = GuiManager.headFactory("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTliZjMyOTJlMTI2YTEwNWI1NGViYTcxM2FhMWIxNTJkNTQxYTFkODkzODgyOWM1NjM2NGQxNzhlZDIyYmYifX19");
+        ItemStack nextBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf");
 
         ItemMeta nextBlockMeta = nextBlock.getItemMeta();
         assert nextBlockMeta != null;

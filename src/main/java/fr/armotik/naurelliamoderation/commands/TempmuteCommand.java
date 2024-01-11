@@ -12,8 +12,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -44,14 +46,10 @@ public class TempmuteCommand implements CommandExecutor {
 
         Player player = ((Player) sender).getPlayer();
 
-        assert player != null;
-        if (!player.hasPermission("naurellia.staff")) {
-            player.sendMessage(Louise.permissionMissing());
-            return false;
-        }
 
         if (args.length == 0) {
 
+            assert player != null;
             player.spigot().sendMessage(msg);
             return false;
         }
@@ -60,6 +58,7 @@ public class TempmuteCommand implements CommandExecutor {
             Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             ExceptionsManager.numberFormatExceptionLog(e);
+            assert player != null;
             player.spigot().sendMessage(msg);
             return false;
         }
@@ -71,29 +70,32 @@ public class TempmuteCommand implements CommandExecutor {
             reason = SanctionsManager.reasonDefBuilder(args, 2);
         }
 
-        ResultSet res = Database.executeQuery("SELECT uuid FROM usersIG WHERE username = '" + args[0] + "'");
+        try (Connection conn = Database.getConnection()) {
 
-        if (res == null) {
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
+            ) {
 
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> TempmuteCommand : onCommand ERROR - res == null");
-            Database.close();
-            return false;
-        }
+                if (res == null) {
 
-        try {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> TempmuteCommand : onCommand ERROR - res == null");
+                    return false;
+                }
 
-            if (!res.next()) {
+                if (!res.next()) {
 
-                player.spigot().sendMessage(msg);
-                return false;
+                    assert player != null;
+                    player.spigot().sendMessage(msg);
+                    return false;
+                }
+
+                SanctionsManager.tempmute(player, UUID.fromString(res.getString("uuid")), reason, TimeUnit.DAYS.toMillis(Integer.parseInt(args[2])));
+                return true;
             }
 
-            SanctionsManager.tempmute(player, UUID.fromString(res.getString("uuid")), reason, TimeUnit.DAYS.toMillis(Integer.parseInt(args[2])));
-            Database.close();
-            return true;
         } catch (SQLException e) {
             ExceptionsManager.sqlExceptionLog(e);
-            Database.close();
             return false;
         }
     }

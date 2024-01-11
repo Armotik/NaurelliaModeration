@@ -1,7 +1,7 @@
 name: NaurelliaModeration
 version: '${project.version}'
 main: fr.armotik.naurelliamoderation.NaurelliaModeration
-api-version: 1.19
+api-version: 1.20
 authors: [ Armotik ]
 description: Moderation plugin for NaurelliaCraft
 website: naurellia.com
@@ -9,18 +9,21 @@ prefix: NaurelliaModeration
 commands:
   warn:
     description: warn a player
+    permission: naurellia.staff.helper
   tempmute:
     description: tempmute a player
+    permission: naurellia.staff.helper
   tempban:
     description: tempban a player
+    permission: naurellia.staff.moderator
   unmute:
     description: unmute a player
+    permission: naurellia.staff.moderator
   unban:
     description: unban a player
+    permission: naurellia.staff.admin
   moderation:
     description: open the moderation GUI
+    permission: naurellia.staff.helper
     aliases:
       - mod
-  test:
-    description: test command
-    permission: naurellia.admin
