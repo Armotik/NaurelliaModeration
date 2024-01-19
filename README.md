@@ -14,9 +14,12 @@
 <ins>This plugin manages the incoming message sent :</ins>
 - Checks for inappropriate language in the message
 
-<ins>This plugin includes a moderation interface with predefined sanctions</ins>
+<ins>This plugin includes GUIS for a better handling of the moderation :</ins>
+- Main Menu GUI (Access to all the other GUIS)
+- Report GUI (Get the player's information and the reason of the report and be able to treat it)
+- Reports GUI (Get all the reports, click on one to open the Report GUI)
+- Infractions GUI (Apply a predefine sanction to a player)
 
-In order to reduce the carbon footprint of the program, all Exceptions are managed in the same class. Moreover, tests to evaluate the carbon footprint of the plugin are performed before each commit. This plugin tries to follow the Responsible Digital Charter of the Institut du Numérique Responsable `https://institutnr.org/charte-numerique-responsable` 
 
 ---
 
