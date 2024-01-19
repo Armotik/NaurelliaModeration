@@ -64,12 +64,21 @@ public class ItemsModGui2 {
         testBanBlockMeta.setDisplayName("§cTEST BAN");
         testBanBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+        // Menu BLOCK
+        ItemStack menuBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/49c45a24aaabf49e217c15483204848a73582aba7fae10ee2c57bdb76482f");
+
+        ItemMeta menuBlockMeta = muteBlock.getItemMeta();
+        assert menuBlockMeta != null;
+        menuBlockMeta.setDisplayName("§cMenu");
+        menuBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         banBlock.setItemMeta(banBlockMeta);
         muteBlock.setItemMeta(muteBlockMeta);
         warnBlock.setItemMeta(warnBlockMeta);
         previousBlock.setItemMeta(previousBlockItemMeta);
         testMuteBlock.setItemMeta(testMuteBlockMeta);
         testBanBlock.setItemMeta(testBanBlockMeta);
+        menuBlock.setItemMeta(menuBlockMeta);
 
         inventory.setItem(1, banBlock);
         inventory.setItem(4, muteBlock);
@@ -77,5 +86,6 @@ public class ItemsModGui2 {
         inventory.setItem(45, previousBlock);
         inventory.setItem(13, testMuteBlock);
         inventory.setItem(10, testBanBlock);
+        inventory.setItem(49, menuBlock);
     }
 }

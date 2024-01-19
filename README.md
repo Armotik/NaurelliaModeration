@@ -23,3 +23,38 @@ In order to reduce the carbon footprint of the program, all Exceptions are manag
 The server is not available.
 
 You can contact me at `contact@naurellia.com` or on Discord `https://discord.gg/64ncf5HZSQ` 
+
+---
+
+last update : 20/01/2024
+
+&copy; 2024 NaurelliaCraft
+
+```
+
+## [1.20.4] - 2024-01-20
+### Added
+- Add a new command : /freeze
+- Add a new command : /unfreeze
+- Add a new command : /invsee
+- Add a new command : /openinv
+- Add a new command : /report
+- Add a new command : /reports
+- Add a new command : /staffchat
+
+- Add new GUIS :
+    - Moderation Main Menu GUI
+    - Report GUI
+    - Reports GUI
+
+- Add a new class : Report (for the report system)
+
+### Changed
+- Change the SanctionManager class to add the new functions
+- Change the Database Utils class to clean the code
+- Change the EventManager class to add the new events and handle the new GUIS
+- Change the FilesReader class to add read reports
+
+### Removed
+
+```

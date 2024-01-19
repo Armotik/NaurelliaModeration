@@ -43,6 +43,26 @@ public final class NaurelliaModeration extends JavaPlugin {
         Objects.requireNonNull(getCommand("unmute")).setExecutor(new UnMuteCommand());
         Objects.requireNonNull(getCommand("unban")).setExecutor(new UnBanCommand());
         Objects.requireNonNull(getCommand("moderation")).setExecutor(new ModerationCommand());
+        Objects.requireNonNull(getCommand("infractions")).setExecutor(new InfractionsCommand());
+        Objects.requireNonNull(getCommand("report")).setExecutor(new ReportCommand());
+        Objects.requireNonNull(getCommand("reports")).setExecutor(new ReportsCommand());
+        Objects.requireNonNull(getCommand("freeze")).setExecutor(new FreezeCommand());
+        Objects.requireNonNull(getCommand("unfreeze")).setExecutor(new UnFreezeCommand());
+        Objects.requireNonNull(getCommand("staffchat")).setExecutor(new StaffChatCommand());
+        Objects.requireNonNull(getCommand("openinv")).setExecutor(new OpenInvCommand());
+        Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvseeCommand());
+        // TODO : Vanish command
+        // TODO : reports command
+        // TODO : anti spam
+        // TODO : anti flood
+        // TODO : anti caps
+        // TODO : anti pub
+        // TODO : Add word to blacklist command
+        // TODO : Remove word from blacklist command
+        // TODO : Blacklist command
+        // TODO : Raid command
+        // TODO : infractions command
+        // TODO : staffcommands command
 
         /*
         Completer
@@ -54,6 +74,8 @@ public final class NaurelliaModeration extends JavaPlugin {
          */
         Database.databaseTest();
         Database.close();
+
+        FilesReader.readReports();
 
         /*
         Event Listeners
@@ -86,6 +108,6 @@ public final class NaurelliaModeration extends JavaPlugin {
                 SanctionsManager.unMuteDetector();
                 SanctionsManager.unBanDetector();
             }
-        }, 0, TimeUnit.SECONDS.toMillis(30)); //5m
+        }, 0, TimeUnit.MINUTES.toMillis(5)); //5m
     }
 }

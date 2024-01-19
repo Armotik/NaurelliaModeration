@@ -1,5 +1,6 @@
 package fr.armotik.naurelliamoderation.utiles;
 
+import fr.armotik.naurelliamoderation.reports.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 
 import java.io.*;
@@ -141,5 +142,29 @@ public class FilesReader {
         }
 
         return connections;
+    }
+
+    public static void readReports() {
+
+        try (Connection conn = Database.getConnection()) {
+
+            assert conn != null;
+            try (Statement statement = conn.createStatement();
+                 ResultSet res = statement.executeQuery("SELECT * FROM Reports WHERE isTreated = 0");
+            ) {
+
+                if (res == null) {
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> FilesReader : readReports ERROR - res == null");
+                    return;
+                }
+
+                while (res.next()) {
+
+                    new Report(UUID.fromString(res.getString("reporter_uuid")), UUID.fromString(res.getString("target_uuid")), res.getString("reason"), res.getString("report_date"), false);
+                }
+            }
+        } catch (SQLException e) {
+            ExceptionsManager.sqlExceptionLog(e);
+        }
     }
 }

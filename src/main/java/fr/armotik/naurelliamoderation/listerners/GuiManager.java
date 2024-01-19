@@ -1,13 +1,11 @@
 package fr.armotik.naurelliamoderation.listerners;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import fr.armotik.naurelliamoderation.guis.ItemsModGui;
-import fr.armotik.naurelliamoderation.guis.ItemsModGui2;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.naurelliamoderation.guis.*;
+import fr.armotik.naurelliamoderation.reports.Report;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
@@ -16,13 +14,24 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.UUID;
 
 public class GuiManager implements Listener {
 
     private static final UUID RANDOM_UUID = UUID.randomUUID();
+
+    public static void mainMenuModGui(Player player, UUID targUUID) {
+
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targUUID);
+
+            Inventory inv = Bukkit.createInventory(null, 45, "§6Moderation Menu : §c§l" + offlinePlayer.getName());
+            ItemsModMenuGui itemsGUIS = new ItemsModMenuGui(inv, offlinePlayer);
+
+            itemsGUIS.mainMenuGui();
+
+            player.openInventory(inv);
+    }
 
     /**
      * Init mod GUI and open it
@@ -31,7 +40,7 @@ public class GuiManager implements Listener {
      */
     public static void modGui(Player player, UUID targetUUID) {
 
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Mod Menu : " + Bukkit.getOfflinePlayer(targetUUID).getName());
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Sanctions : §c§l" + Bukkit.getOfflinePlayer(targetUUID).getName());
         ItemsModGui itemsGUIS = new ItemsModGui(inv);
 
         itemsGUIS.itemsModGui();
@@ -46,10 +55,30 @@ public class GuiManager implements Listener {
      */
     public static void modGui2(Player player, UUID targetUUID) {
 
-        Inventory inv = Bukkit.createInventory(null, 54, "§6Mod Menu : " + Bukkit.getOfflinePlayer(targetUUID).getName());
+        Inventory inv = Bukkit.createInventory(null, 54, "§6Sanctions : §c§l" + Bukkit.getOfflinePlayer(targetUUID).getName());
         ItemsModGui2 itemsGUIS = new ItemsModGui2(inv);
 
         itemsGUIS.itemsModGui2();
+
+        player.openInventory(inv);
+    }
+
+    public static void reportGui(Player player, int page) {
+
+        Inventory inv = Bukkit.createInventory(null, 54, "§cReports");
+        ItemsReportGui itemsGUIS = new ItemsReportGui(inv, page, null);
+
+        itemsGUIS.reportGui();
+
+        player.openInventory(inv);
+    }
+
+    public static void modifyReportGui(Player player, Report report) {
+
+        Inventory inv = Bukkit.createInventory(null, 9, "§cReport : §6" + report.getId());
+        ItemModifyReportGUi itemModifyReportGUi = new ItemModifyReportGUi(inv, report);
+
+        itemModifyReportGUi.modifyReportGui();
 
         player.openInventory(inv);
     }
@@ -70,7 +99,7 @@ public class GuiManager implements Listener {
 
         return item;
     }
-    public static PlayerProfile getProfile(String url) {
+    private static PlayerProfile getProfile(String url) {
         PlayerProfile profile = Bukkit.createPlayerProfile(RANDOM_UUID);
         PlayerTextures textures = profile.getTextures();
         URL urlObject;
@@ -84,5 +113,16 @@ public class GuiManager implements Listener {
         textures.setSkin(urlObject);
         profile.setTextures(textures);
         return profile;
+    }
+
+    public static ItemStack getPlayerHead(OfflinePlayer player) {
+
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        assert meta != null;
+        meta.setOwningPlayer(player);
+        head.setItemMeta(meta);
+
+        return head;
     }
 }

@@ -18,8 +18,6 @@ public class ItemsModGui {
 
     public void itemsModGui() {
 
-
-
         // BANS BLOCK
         ItemStack banBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/50c1b584f13987b466139285b2f3f28df6787123d0b32283d8794e3374e23");
 
@@ -180,6 +178,22 @@ public class ItemsModGui {
         nonEnglishBlockMeta.setDisplayName("§dNon English Chatting");
         nonEnglishBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+        // REPORT ABUSE BLOCK
+        ItemStack reportAbuseBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/8d17b0e48c1dee2736269ebcbfa76028751aab101c9fa1c60256dd25c3241");
+
+        ItemMeta reportAbuseBlockMeta = reportAbuseBlock.getItemMeta();
+        assert reportAbuseBlockMeta != null;
+        reportAbuseBlockMeta.setDisplayName("§bReport Abuse");
+        reportAbuseBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        // REPORT ABUSE (RELAPSE) BLOCK
+        ItemStack reportAbuseBlockRelapse = GuiManager.headFactory("http://textures.minecraft.net/texture/c69beb676da143bbc4f4d8f5246aaeaf3b39a4caa3a908b3dab4050b082a355");
+
+        ItemMeta reportAbuseBlockRelapseMeta = reportAbuseBlockRelapse.getItemMeta();
+        assert reportAbuseBlockRelapseMeta != null;
+        reportAbuseBlockRelapseMeta.setDisplayName("§dReport Abuse (Relapse)");
+        reportAbuseBlockRelapseMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         // NEXT BLOCK
         ItemStack nextBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf");
 
@@ -187,6 +201,14 @@ public class ItemsModGui {
         assert nextBlockMeta != null;
         nextBlockMeta.setDisplayName("§cNext Page");
         nextBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        // Menu BLOCK
+        ItemStack menuBlock = GuiManager.headFactory("http://textures.minecraft.net/texture/49c45a24aaabf49e217c15483204848a73582aba7fae10ee2c57bdb76482f");
+
+        ItemMeta menuBlockMeta = muteBlock.getItemMeta();
+        assert menuBlockMeta != null;
+        menuBlockMeta.setDisplayName("§cMenu");
+        menuBlockMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         banBlock.setItemMeta(banBlockMeta);
         muteBlock.setItemMeta(muteBlockMeta);
@@ -209,6 +231,9 @@ public class ItemsModGui {
         inapDiscussionBlock.setItemMeta(inapDiscussionBlockMeta);
         nonEnglishBlock.setItemMeta(nonEnglishBlockMeta);
         nextBlock.setItemMeta(nextBlockMeta);
+        menuBlock.setItemMeta(menuBlockMeta);
+        reportAbuseBlock.setItemMeta(reportAbuseBlockMeta);
+        reportAbuseBlockRelapse.setItemMeta(reportAbuseBlockRelapseMeta);
 
         inventory.setItem(1, banBlock);
         inventory.setItem(4, muteBlock);
@@ -224,12 +249,15 @@ public class ItemsModGui {
         inventory.setItem(21, toxicityBlock);
         inventory.setItem(23, harassmentBlock);
         inventory.setItem(24, griefingBlock);
+        inventory.setItem(26, reportAbuseBlock);
         inventory.setItem(27, harassmentBlockRelapse);
         inventory.setItem(29, toxicityBlockRelapse);
         inventory.setItem(30, inapDiscussionBlock);
         inventory.setItem(32, nonEnglishBlock);
         inventory.setItem(36, altBlock);
         inventory.setItem(38, altUsageBlock);
+        inventory.setItem(39, reportAbuseBlockRelapse);
         inventory.setItem(53, nextBlock);
+        inventory.setItem(49, menuBlock);
     }
 }

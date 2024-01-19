@@ -71,7 +71,7 @@ public class ModerationCommand implements CommandExecutor {
                     return false;
                 }
 
-                GuiManager.modGui(player, UUID.fromString(res.getString("uuid")));
+                GuiManager.mainMenuModGui(player, UUID.fromString(res.getString("uuid")));
 
             }
 

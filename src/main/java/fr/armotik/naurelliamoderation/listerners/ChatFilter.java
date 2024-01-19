@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class ChatFilter implements Listener {
 
-    public static final List<String> blackListedWords = new ArrayList<>();
+    public static List<String> blackListedWords = new ArrayList<>();
 
     public ChatFilter() {
 

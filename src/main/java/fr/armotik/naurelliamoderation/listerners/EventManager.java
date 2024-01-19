@@ -3,6 +3,7 @@ package fr.armotik.naurelliamoderation.listerners;
 import fr.armotik.naurelliamoderation.Louise;
 import fr.armotik.naurelliamoderation.commands.BanCommand;
 import fr.armotik.naurelliamoderation.commands.KickCommand;
+import fr.armotik.naurelliamoderation.reports.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
@@ -25,9 +26,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,11 @@ import java.util.logging.Logger;
 public class EventManager implements Listener {
 
     private final Logger logger = Logger.getLogger(EventManager.class.getName());
+    private static Map<UUID, Boolean> frozen = new HashMap<>();
 
+    public static Map<UUID, Boolean> getFrozen() {
+        return frozen;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -170,6 +173,18 @@ public class EventManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+
+        Player player = event.getPlayer();
+
+        if (getFrozen().containsKey(player.getUniqueId())) {
+
+            event.setCancelled(true);
+            player.sendMessage(Louise.getName() + "§cYou're frozen, you can't move !");
+        }
+    }
+
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
 
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -178,10 +193,18 @@ public class EventManager implements Listener {
 
         Player player = (Player) event.getWhoClicked();
 
+        if (event.getClickedInventory() != null &&
+                event.getClickedInventory().getHolder() instanceof Player &&
+                (player.hasPermission("naurellia.staff.helper") && !player.hasPermission("naurellia.staff.srmod"))) {
+
+            event.setCancelled(true);
+            player.sendMessage(Louise.getName() + "§cYou can't interact with this inventory !");
+            return;
+        }
+
         if (player.hasPermission("naurellia.staff.helper")) {
 
-
-            if (player.getOpenInventory().getTitle().startsWith("§6Mod Menu :")) {
+            if (player.getOpenInventory().getTitle().startsWith("§6Moderation Menu : §c§l")) {
 
                 event.setCancelled(true);
 
@@ -190,11 +213,178 @@ public class EventManager implements Listener {
 
                 try (Connection conn = Database.getConnection()) {
 
-                    System.out.println("test3");
+                    assert conn != null;
+
+                    try (Statement statement = conn.createStatement();
+                         ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign='" + player.getOpenInventory().getTitle().split("§c§l")[1] + "'");
+                    ) {
+                        if (res == null) {
+
+                            logger.log(Level.WARNING, "[NaurelliaModeration] -> EventManager : onInventoryClick ERROR - res == null");
+                            return;
+                        }
+
+                        if (res.next()) {
+
+                            target = Bukkit.getOfflinePlayer(UUID.fromString(res.getString("uuid")));
+                        }
+                    }
+                } catch (SQLException e) {
+
+                    ExceptionsManager.sqlExceptionLog(e);
+                    return;
+                }
+
+                if (target == null) {
+
+                    player.sendMessage(Louise.playerNotFound());
+                    return;
+                }
+
+                if (current.getType() == Material.PLAYER_HEAD) {
+
+                    switch (Objects.requireNonNull(current.getItemMeta()).getDisplayName()) {
+
+                        case "§aOpen Inventory" -> {
+                            player.getOpenInventory().close();
+                            player.openInventory(Objects.requireNonNull(target.getPlayer()).getInventory());
+                            break;
+                        }
+
+                        case "§aVanish" -> {
+                            // Todo
+                        }
+
+                        case "§bFreeze" -> {
+
+                            if (!target.isOnline()) {
+
+                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.getOpenInventory().close();
+                            }
+
+                            if (getFrozen().containsKey(target.getUniqueId())) {
+
+                                getFrozen().remove(target.getUniqueId());
+                                player.sendMessage(Louise.getName() + "§aYou unfroze " + target.getName() + "§a !");
+                                Objects.requireNonNull(target.getPlayer()).sendMessage(Louise.getName() + "§aYou've been unfrozen by " + player.getName() + "§a !");
+                                player.getOpenInventory().close();
+                            } else {
+
+                                getFrozen().put(target.getUniqueId(), true);
+                                player.sendMessage(Louise.getName() + "§aYou froze " + target.getName() + "§a !");
+                                Objects.requireNonNull(target.getPlayer()).sendMessage(Louise.getName() + "§aYou've been frozen by " + player.getName() + "§a !");
+                                player.getOpenInventory().close();
+                            }
+                            break;
+                        }
+
+                        case "§cSanctions" -> {
+                            GuiManager.modGui(player, target.getUniqueId());
+                        }
+
+                        default -> {
+                        }
+                    }
+                }
+            }
+
+            if (player.getOpenInventory().getTitle().equalsIgnoreCase("§cReports")) {
+
+                event.setCancelled(true);
+
+                ItemStack current = event.getCurrentItem();
+
+                int page = Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(event.getClickedInventory()).getItem(49)).getItemMeta()).getDisplayName().split("§6")[1]);
+
+                if (current.getType() == Material.PLAYER_HEAD) {
+
+                    switch (Objects.requireNonNull(current.getItemMeta()).getDisplayName()) {
+
+                        case "§cNext Page" -> {
+                            player.getOpenInventory().close();
+                            GuiManager.reportGui(player, page + 1);
+                        }
+
+                        case "§cPrevious Page" -> {
+                            player.getOpenInventory().close();
+                            GuiManager.reportGui(player, page - 1);
+                        }
+
+                        default -> {
+                        }
+                    }
+
+                    if (current.getItemMeta().hasLore() && player.hasPermission("naurellia.staff.mod")) {
+
+                        List<String> lore = current.getItemMeta().getLore();
+
+                        if (lore == null) return;
+
+                        if (lore.size() > 4) return;
+
+                        int id = Integer.parseInt(lore.get(0).split("§6")[1]);
+
+                        Report report = Report.getReports().get(id);
+
+                        if (report == null || report.isTreated()) return;
+
+                        player.getOpenInventory().close();
+                        GuiManager.modifyReportGui(player, report);
+                    }
+                }
+            }
+
+            if (player.getOpenInventory().getTitle().startsWith("§cReport : §6")) {
+
+                event.setCancelled(true);
+
+                ItemStack current = event.getCurrentItem();
+
+                if (current.getType() == Material.PLAYER_HEAD && Objects.requireNonNull(current.getItemMeta()).getDisplayName().equalsIgnoreCase("§aResolved")) {
+
+                    int id = Integer.parseInt(player.getOpenInventory().getTitle().split("§6")[1]);
+
+                    Report report = Report.getReports().get(id);
+
+                    if (report == null || report.isTreated()) return;
+
+                    try (Connection conn = Database.getConnection()) {
+
+                        assert conn != null;
+
+                        try (Statement statement = conn.createStatement()) {
+
+                            statement.executeUpdate("UPDATE Reports SET isTreated=1, wasTreatedBy='" + player.getUniqueId() + "' WHERE id=" + id);
+
+                            report.setTreated(true);
+                            player.getOpenInventory().close();
+                            player.sendMessage(Louise.getName() + "§aYou resolved the report §6#" + id + "§a !");
+                            GuiManager.reportGui(player, 1);
+                        }
+                    } catch (SQLException e) {
+
+                        ExceptionsManager.sqlExceptionLog(e);
+
+                        player.sendMessage(Louise.getName() + "§cAn error occurred while resolving the report §6#" + id + "§c !");
+                        player.getOpenInventory().close();
+                        GuiManager.reportGui(player, 1);
+                    }
+                }
+            }
+
+            if (player.getOpenInventory().getTitle().startsWith("§6Sanctions : §c§l")) {
+
+                event.setCancelled(true);
+
+                ItemStack current = event.getCurrentItem();
+                OfflinePlayer target = null;
+
+                try (Connection conn = Database.getConnection()) {
 
                     assert conn != null;
                     try (Statement statement = conn.createStatement();
-                         ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign='" + player.getOpenInventory().getTitle().split(" : ")[1] + "'");
+                         ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign='" + player.getOpenInventory().getTitle().split("§c§l")[1] + "'");
                     ) {
                         if (res == null) {
 
@@ -360,7 +550,19 @@ public class EventManager implements Listener {
                             SanctionsManager.tempban(player, target.getUniqueId(), "TEST BAN", TimeUnit.SECONDS.toMillis(10));
                             player.getOpenInventory().close();
                         }
-                        default -> {}
+                        case "§cMenu" -> {
+                            GuiManager.mainMenuModGui(player, target.getUniqueId());
+                        }
+                        case "§dReport Abuse" -> {
+                            SanctionsManager.warn(player, target.getUniqueId(), "REPORT ABUSE");
+                            player.getOpenInventory().close();
+                        }
+                        case "§dReport Abuse (Relapse)" -> {
+                            SanctionsManager.tempmute(player, target.getUniqueId(), "REPORT ABUSE (RELAPSE)", TimeUnit.HOURS.toMillis(6));
+                            player.getOpenInventory().close();
+                        }
+                        default -> {
+                        }
                     }
                 }
             }

@@ -15,10 +15,10 @@ commands:
     permission: naurellia.staff.helper
   tempban:
     description: tempban a player
-    permission: naurellia.staff.moderator
+    permission: naurellia.staff.mod
   unmute:
     description: unmute a player
-    permission: naurellia.staff.moderator
+    permission: naurellia.staff.mod
   unban:
     description: unban a player
     permission: naurellia.staff.admin
@@ -27,3 +27,28 @@ commands:
     permission: naurellia.staff.helper
     aliases:
       - mod
+  infractions:
+    description: get the infractions of a player
+    permission: naurellia.staff.helper
+  freeze:
+    description: freeze a player
+    permission: naurellia.staff.helper
+  unfreeze:
+    description: unfreeze a player
+    permission: naurellia.staff.helper
+  report:
+    description: report a player
+  reports:
+    description: get the reports
+    permission: naurellia.staff.helper
+  staffchat:
+    description: talk in the staff chat
+    permission: naurellia.staff.helper
+    aliases:
+      - sc
+  openinv:
+    description: open the inventory of a player
+    permission: naurellia.staff.srmod
+  invsee:
+    description: open the inventory of a player but can't interact with it
+    permission: naurellia.staff.helper

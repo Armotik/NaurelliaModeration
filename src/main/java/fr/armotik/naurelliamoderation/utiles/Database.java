@@ -17,7 +17,6 @@ public class Database {
 
     private static final Logger logger = Logger.getLogger(Database.class.getName());
     private static HikariDataSource dataSource;
-    private static final ThreadLocal<Connection> connection = new ThreadLocal<>();
     private static final List<String> databaseStringList = NaurelliaModeration.getPlugin().getConfig().getStringList("Database");
 
     private Database() {
@@ -128,20 +127,11 @@ public class Database {
      */
     public static void close() {
 
-        if (dataSource == null) return;
+        if (dataSource != null && !dataSource.isClosed()) {
 
-        Connection conn = connection.get();
-
-        try {
-
-            if (conn != null) {
-                conn.close();
-                connection.remove();
-            }
-
-        } catch (SQLException e) {
-            ExceptionsManager.sqlExceptionLog(e);
+            dataSource.close();
         }
+
     }
 
     /**
@@ -182,6 +172,8 @@ public class Database {
         } finally {
             try {
                 if (statement != null) statement.close();
+
+                if (conn != null) conn.close();
             } catch (SQLException e) {
 
                 ExceptionsManager.sqlExceptionLog(e);

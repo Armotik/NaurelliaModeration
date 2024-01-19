@@ -1,6 +1,7 @@
 package fr.armotik.naurelliamoderation.tools;
 
 import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.naurelliamoderation.reports.Report;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
@@ -539,6 +540,63 @@ public class SanctionsManager implements Listener {
         }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " is now unbanned");
+        Database.close();
+    }
+
+    public static void report(Player reporter, Player target, String reason) {
+
+        if (Report.getReports() != null) {
+
+            for (Report report : Report.getReports()) {
+
+                // transform string date to date
+                Date date = null;
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    date = dateFormat.parse(report.getDate());
+                } catch (ParseException e) {
+                    ExceptionsManager.parseExceptionLog(e);
+                }
+
+            /*
+            If the player has already reported this player within the last hour
+             */
+                if (report.getReporter_uuid().equals(reporter.getUniqueId()) &&
+                        report.getTarget_uuid().equals(target.getUniqueId()) &&
+                        date != null &&
+                        date.after(new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1))) &&
+                        !report.isTreated() &&
+                        !reporter.hasPermission("naurellia.staff.helper")) {
+
+                    reporter.sendMessage(Louise.getName() + "§cPlease wait 1h before reporting this player again");
+                    return;
+                }
+            }
+        }
+
+        int req = Database.executeUpdate("INSERT INTO Reports (reporter_uuid, target_uuid, reason, report_date) VALUES ('" + reporter.getUniqueId() + "', '" + target.getUniqueId() + "', '" + reason + "', '" + LOCAL_DATE.format(FORMATTER) + "');");
+
+        if (req <= 0) {
+
+            reporter.sendMessage(Louise.commandError());
+            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : report ERROR - req <= 0");
+            Database.close();
+            return;
+        }
+
+        new Report(reporter.getUniqueId(), target.getUniqueId(), reason, LOCAL_DATE.format(FORMATTER), false);
+
+        reporter.sendMessage(Louise.getName() + "§aPlayer successfully reported");
+
+        for (Player staff : Bukkit.getOnlinePlayers()) {
+
+            if (staff.hasPermission("naurellia.staff.helper")) {
+
+                staff.sendMessage(Louise.getName() + " §7» §c" + reporter.getName() + " §7reported §c" + target.getName() + " §7for §c" + reason + "§7.");
+            }
+        }
+
+        logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + reporter.getName() + " has reported " + target.getName() + " for " + reason);
         Database.close();
     }
 

@@ -43,10 +43,6 @@ public class WarnCommand implements CommandExecutor {
         Player player = ((Player) sender).getPlayer();
 
         assert player != null;
-        if (!player.hasPermission("naurellia.staff")) {
-            player.sendMessage(Louise.permissionMissing());
-            return false;
-        }
 
         if (args.length == 0) {
 

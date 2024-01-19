@@ -41,14 +41,6 @@ public class UnMuteCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return false;
 
         /*
-          IF THE SENDER DO NOT HAVE THE PERMISSION
-         */
-        if (!sender.hasPermission("naurellia.unmute")) {
-            sender.sendMessage(Louise.permissionMissing());
-            return false;
-        }
-
-        /*
         IF NO ARGUMENTS
          */
         if (args.length < 1) {
