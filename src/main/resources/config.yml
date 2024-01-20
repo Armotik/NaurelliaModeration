@@ -2,3 +2,5 @@ Database:
   - "jdbc:mysql://localhost:3306/Minecraft"
   - "phpmyadmin"
   - "root"
+authorized-links:
+  - naurellia.com

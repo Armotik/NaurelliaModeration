@@ -1,7 +1,7 @@
 package fr.armotik.naurelliamoderation.listerners;
 
 import fr.armotik.naurelliamoderation.guis.*;
-import fr.armotik.naurelliamoderation.reports.Report;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

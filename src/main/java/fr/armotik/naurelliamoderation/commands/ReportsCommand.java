@@ -2,7 +2,7 @@ package fr.armotik.naurelliamoderation.commands;
 
 import fr.armotik.naurelliamoderation.Louise;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
-import fr.armotik.naurelliamoderation.reports.Report;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

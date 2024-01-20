@@ -3,14 +3,10 @@ package fr.armotik.naurelliamoderation.listerners;
 import fr.armotik.naurelliamoderation.Louise;
 import fr.armotik.naurelliamoderation.commands.BanCommand;
 import fr.armotik.naurelliamoderation.commands.KickCommand;
-import fr.armotik.naurelliamoderation.reports.Report;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -39,6 +35,56 @@ public class EventManager implements Listener {
     public static Map<UUID, Boolean> getFrozen() {
         return frozen;
     }
+    private static boolean raidMode = false;
+
+    public static boolean isRaidMode() {
+        return raidMode;
+    }
+
+    public static void setRaidMode(boolean newRaidMode) {
+        raidMode = newRaidMode;
+    }
+
+    @EventHandler
+    public void onPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
+
+        UUID uuid = event.getUniqueId();
+
+        if (!raidMode) return;
+
+        try (Connection conn = Database.getConnection()) {
+
+            assert conn != null;
+
+            try (Statement statement = conn.createStatement();
+            ResultSet res = statement.executeQuery("SELECT permission FROM PlayersPermissions WHERE player_uuid='" + uuid + "'");
+            ) {
+                if (res == null) {
+
+                    logger.log(Level.WARNING, "[NaurelliaModeration] -> EventManager : onPlayerPreLogin ERROR - res == null");
+                    return;
+                }
+
+                if (res.next()) {
+
+                    if (res.getString("permission").startsWith("naurellia.staff")) {
+
+                        event.setLoginResult(AsyncPlayerPreLoginEvent.Result.ALLOWED);
+                        return;
+                    }
+
+                    event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+                } else {
+
+                    event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+                }
+            }
+
+        } catch (SQLException e) {
+
+            ExceptionsManager.sqlExceptionLog(e);
+        }
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -53,45 +99,6 @@ public class EventManager implements Listener {
 
             player.kickPlayer("§cCONNECTION REFUSED - VPN");
             logger.log(Level.INFO, player.getName() + "[NaurelliaModeration] -> kicked (CONNECTION REFUSED - VPN) ");
-        }
-    }
-
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-
-        Player player = event.getPlayer();
-        String message = event.getMessage();
-
-        if (SanctionsManager.getBannedFromChat().containsKey(player.getUniqueId())) {
-
-            event.setCancelled(true);
-            TextComponent msg = new TextComponent(Louise.getName() + "§cYou're muted, you can't speak in the chat !");
-            msg.setHoverEvent(new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
-            ));
-            msg.setClickEvent(new ClickEvent(
-                    ClickEvent.Action.OPEN_URL, "https://www.naurelliacraft.com/rules/#chat"
-            ));
-
-            player.spigot().sendMessage(msg);
-            return;
-        }
-
-        for (String word : ChatFilter.blackListedWords) {
-
-            if (!player.hasPermission("naurellia.staff.helper") && message.toLowerCase(Locale.ENGLISH).contains(word)) {
-
-                event.setCancelled(true);
-                TextComponent msg = new TextComponent(Louise.chatFilter());
-                msg.setHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
-                ));
-                msg.setClickEvent(new ClickEvent(
-                        ClickEvent.Action.OPEN_URL, "https://www.naurelliacraft.com/rules/#chat"
-                ));
-
-                player.spigot().sendMessage(msg);
-            }
         }
     }
 
@@ -111,21 +118,6 @@ public class EventManager implements Listener {
 
         String cmd = event.getMessage().toLowerCase(Locale.ENGLISH);
         Player player = event.getPlayer();
-
-        if (!SanctionsManager.getBannedFromChat().isEmpty() && SanctionsManager.getBannedFromChat().containsKey(event.getPlayer().getUniqueId())) {
-
-            event.setCancelled(true);
-            TextComponent msg = new TextComponent(Louise.getName() + "§cYou're muted, you can't speak in the chat !");
-            msg.setHoverEvent(new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
-            ));
-            msg.setClickEvent(new ClickEvent(
-                    ClickEvent.Action.OPEN_URL, "https://www.naurelliacraft.com/rules/#chat"
-            ));
-
-            player.spigot().sendMessage(msg);
-            return;
-        }
 
         if (cmd.startsWith("/ban ")) {
             event.setCancelled(true);
@@ -325,7 +317,7 @@ public class EventManager implements Listener {
 
                         int id = Integer.parseInt(lore.get(0).split("§6")[1]);
 
-                        Report report = Report.getReports().get(id);
+                        Report report = Report.getReports().get(id - 1);
 
                         if (report == null || report.isTreated()) return;
 
@@ -345,7 +337,7 @@ public class EventManager implements Listener {
 
                     int id = Integer.parseInt(player.getOpenInventory().getTitle().split("§6")[1]);
 
-                    Report report = Report.getReports().get(id);
+                    Report report = Report.getReports().get(id - 1);
 
                     if (report == null || report.isTreated()) return;
 

@@ -1,8 +1,7 @@
 package fr.armotik.naurelliamoderation.guis;
 
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
-import fr.armotik.naurelliamoderation.reports.Report;
-import org.bukkit.entity.Player;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

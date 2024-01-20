@@ -1,6 +1,7 @@
 package fr.armotik.naurelliamoderation.utiles;
 
-import fr.armotik.naurelliamoderation.reports.Report;
+import fr.armotik.naurelliamoderation.listerners.ChatFilter;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 
 import java.io.*;
@@ -39,6 +40,42 @@ public class FilesReader {
 
         return bufferedReader.lines();
     }
+
+    /**
+     * WRITE STRING TO A GIVEN FILE IN THE RESOURCES FOLDER OF THE PLUGIN (WHERE THE CONFIG IS)
+     */
+    public static void writeStrings() {
+
+        File file = new File("blacklistedWords.txt");
+
+        if (file.length() != 0L) {
+            file.delete();
+        }
+
+        if (ChatFilter.getBlackListedWords().isEmpty()) {
+            logger.log(Level.INFO, "[NaurelliaModeration] -> FilesReader : Unable to write Blacklisted Words - map is empty");
+            return;
+        }
+
+        try {
+            file.createNewFile();
+
+            PrintWriter writer = new PrintWriter(file);
+            writer.flush();
+
+            ChatFilter.getBlackListedWords().forEach(writer::println);
+
+            assert (file.length() > 0L);
+
+            logger.log(Level.INFO, "[NaurelliaModeration] -> FilesReader : Successfully wrote Blacklisted Words");
+
+            writer.close();
+
+        } catch (IOException e) {
+            ExceptionsManager.ioExceptionLog(e);
+        }
+    }
+
 
     /**
      * Read Infractions saved on the offlineInfractions file
@@ -150,7 +187,7 @@ public class FilesReader {
 
             assert conn != null;
             try (Statement statement = conn.createStatement();
-                 ResultSet res = statement.executeQuery("SELECT * FROM Reports WHERE isTreated = 0");
+                 ResultSet res = statement.executeQuery("SELECT * FROM Reports");
             ) {
 
                 if (res == null) {
@@ -160,7 +197,7 @@ public class FilesReader {
 
                 while (res.next()) {
 
-                    new Report(UUID.fromString(res.getString("reporter_uuid")), UUID.fromString(res.getString("target_uuid")), res.getString("reason"), res.getString("report_date"), false);
+                    new Report(UUID.fromString(res.getString("reporter_uuid")), UUID.fromString(res.getString("target_uuid")), res.getString("reason"), res.getString("report_date"), res.getBoolean("isTreated"));
                 }
             }
         } catch (SQLException e) {

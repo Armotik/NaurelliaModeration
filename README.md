@@ -10,9 +10,12 @@
 - Verification of the player's IP Address
 - Check if the player is connected to a VPN
 - Check if the player have other account at the same IP Address
+- Disallow the connection if the player is the raid mode is enabled (staff can still connect)
 
 <ins>This plugin manages the incoming message sent :</ins>
-- Checks for inappropriate language in the message
+- Checks for inappropriate language in the message (with a list of words modifiable by the staff)
+- Checks for spam in the message
+- Checks for links in the message (with a list of domains modifiable by the staff or in the config file)
 
 <ins>This plugin includes GUIS for a better handling of the moderation :</ins>
 - Main Menu GUI (Access to all the other GUIS)
@@ -20,6 +23,14 @@
 - Reports GUI (Get all the reports, click on one to open the Report GUI)
 - Infractions GUI (Apply a predefine sanction to a player)
 
+---
+
+### ChangeLogs
+
+All the changelogs are available in the [changelogs'](changelogs) folder.
+
+- [21-01-2024 - Changelog](changelogs/%5B21-01-2024%5D%20-%20Changelog.md)
+- [20-01-2024 - Changelog](changelogs/%5B20-01-2024%5D%20-%20Changelog.md)
 
 ---
 
@@ -29,35 +40,6 @@ You can contact me at `contact@naurellia.com` or on Discord `https://discord.gg/
 
 ---
 
-last update : 20/01/2024
+last update : 21/01/2024
 
 &copy; 2024 NaurelliaCraft
-
-```
-
-## [1.20.4] - 2024-01-20
-### Added
-- Add a new command : /freeze
-- Add a new command : /unfreeze
-- Add a new command : /invsee
-- Add a new command : /openinv
-- Add a new command : /report
-- Add a new command : /reports
-- Add a new command : /staffchat
-
-- Add new GUIS :
-    - Moderation Main Menu GUI
-    - Report GUI
-    - Reports GUI
-
-- Add a new class : Report (for the report system)
-
-### Changed
-- Change the SanctionManager class to add the new functions
-- Change the Database Utils class to clean the code
-- Change the EventManager class to add the new events and handle the new GUIS
-- Change the FilesReader class to add read reports
-
-### Removed
-
-```

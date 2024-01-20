@@ -1,7 +1,7 @@
 package fr.armotik.naurelliamoderation.tools;
 
 import fr.armotik.naurelliamoderation.Louise;
-import fr.armotik.naurelliamoderation.reports.Report;
+import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
@@ -44,6 +44,7 @@ public class SanctionsManager implements Listener {
 
     /**
      * Get bannedFromChat Map
+     *
      * @return BannedFromChat Map
      */
     public static Map<UUID, Date> getBannedFromChat() {
@@ -52,6 +53,7 @@ public class SanctionsManager implements Listener {
 
     /**
      * Get offlineInfraction Map
+     *
      * @return OfflineInfraction Map
      */
     public static Map<UUID, String> getOfflineInfractionMessages() {
@@ -88,12 +90,24 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
-                "VALUES ('" + targetUUID + "','WARN','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
+        int req = 0;
+
+        if (staff == null) {
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+                    "VALUES ('" + targetUUID + "','WARN','" + reason + "'," + null + ",'" + LOCAL_DATE.format(FORMATTER) + "');");
+        } else {
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+                    "VALUES ('" + targetUUID + "','WARN','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
+        }
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            if (staff != null) {
+                staff.sendMessage(Louise.commandError());
+            }
+
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : warn ERROR - req <= 0");
             Database.close();
             return;
@@ -113,15 +127,16 @@ public class SanctionsManager implements Listener {
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
             offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been warned for : §a" + reason + "\n§6|-------------------+====+-------------------|");
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully warned");
-            logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been warned by : " + staff.getName() + " for : " + reason);
 
-            Database.close();
-            return;
+        } else {
+
+            Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
         }
 
-        Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully warned");
+        if (staff != null) {
+
+            staff.sendMessage(Louise.getName() + "§aPlayer successfully warned");
+        }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).getName() + " has been warned by : " + staff.getName() + " for : " + reason);
 
@@ -146,6 +161,7 @@ public class SanctionsManager implements Listener {
         calendar.setTimeInMillis(DATE.getTime() + duration);
         Date unMuteDate = calendar.getTime();
 
+
         double muteDays = longToDouble(duration);
 
         /*
@@ -153,12 +169,25 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
-                "VALUES ('" + targetUUID + "','TEMPMUTE','" + reason + "','" + staff.getUniqueId() + "'," + muteDays + ",'" + LOCAL_DATE.format(FORMATTER) + "','" + DATE_FORMAT.format(unMuteDate) + "');");
+        int req = 0;
+
+        if (staff == null) {
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
+                    "VALUES ('" + targetUUID + "','TEMPMUTE','" + reason + "'," + null + "," + muteDays + ",'" + LOCAL_DATE.format(FORMATTER) + "','" + DATE_FORMAT.format(unMuteDate) + "');");
+        } else {
+
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, duration, infractionDate, endInfraction) " +
+                    "VALUES ('" + targetUUID + "','TEMPMUTE','" + reason + "','" + staff.getUniqueId() + "'," + muteDays + ",'" + LOCAL_DATE.format(FORMATTER) + "','" + DATE_FORMAT.format(unMuteDate) + "');");
+        }
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            if (staff != null) {
+                staff.sendMessage(Louise.commandError());
+            }
+
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : " + "[NaurelliaModeration] -> SanctionManager : tempmute ERROR - req <= 0");
             Database.close();
             return;
@@ -170,7 +199,11 @@ public class SanctionsManager implements Listener {
             bannedFromChat.put(targetUUID, DATE_FORMAT.parse(DATE_FORMAT.format(unMuteDate)));
         } catch (ParseException e) {
             ExceptionsManager.parseExceptionLog(e);
-            staff.sendMessage(Louise.commandError());
+
+            if (staff != null) {
+                staff.sendMessage(Louise.commandError());
+            }
+
             Database.close();
             return;
         }
@@ -189,17 +222,16 @@ public class SanctionsManager implements Listener {
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
             offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been muted for : §a" + reason + "\n§cUNMUTE DATE : §f§l" + DATE_FORMAT.format(unMuteDate) + "\n§6|-------------------+====+-------------------|");
+        } else {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
-            logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been muted by : " + staff.getName() + " until " + DATE_FORMAT.format(unMuteDate) + " for : " + reason);
-
-            Database.close();
-            return;
+            Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
         }
 
-        Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
 
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+        if (staff != null) {
+
+            staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+        }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).getName() + " has been muted by : " + staff.getName() + " until " + DATE_FORMAT.format(unMuteDate) + " for : " + reason);
 
@@ -271,9 +303,9 @@ public class SanctionsManager implements Listener {
      * Kick a player
      * Add the infraction in the database
      *
-     * @param staff      who executed the command
-     * @param target     who will get the infraction
-     * @param reason     reason
+     * @param staff  who executed the command
+     * @param target who will get the infraction
+     * @param reason reason
      */
     public static void kick(Player staff, Player target, String reason) {
 
@@ -411,6 +443,7 @@ public class SanctionsManager implements Listener {
 
         Database.close();
     }
+
     /**
      * Ban-ip a player
      * Kick the player if the player is online
@@ -462,7 +495,7 @@ public class SanctionsManager implements Listener {
      * Unmute a player
      * Update the infractions
      *
-     * @param staff who executed the command
+     * @param staff      who executed the command
      * @param targetUUID who will be unmuted
      */
     public static void unMute(Player staff, UUID targetUUID) {
@@ -515,7 +548,7 @@ public class SanctionsManager implements Listener {
      * UnBan a player
      * Update the infractions
      *
-     * @param staff who executed the command
+     * @param staff  who executed the command
      * @param target who will be unbanned
      */
     public static void unBan(Player staff, OfflinePlayer target) {
@@ -602,6 +635,7 @@ public class SanctionsManager implements Listener {
 
     /**
      * Check offlineInfractions Map to see if the player got an infractions
+     *
      * @param target target
      */
     public static void checkInfractions(Player target) {
@@ -712,7 +746,7 @@ public class SanctionsManager implements Listener {
                     return;
                 }
 
-                while (res.next())  {
+                while (res.next()) {
 
                     String endInfraction = res.getString("endinfraction");
 
@@ -745,7 +779,8 @@ public class SanctionsManager implements Listener {
 
     /**
      * Build the reason for infraction's commands
-     * @param args args
+     *
+     * @param args    args
      * @param rmIndex index to remove
      * @return reason
      */

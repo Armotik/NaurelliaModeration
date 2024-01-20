@@ -1,6 +1,7 @@
 package fr.armotik.naurelliamoderation;
 
 import fr.armotik.naurelliamoderation.commands.*;
+import fr.armotik.naurelliamoderation.completers.ChatFilterCompleter;
 import fr.armotik.naurelliamoderation.listerners.*;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
@@ -33,6 +34,9 @@ public final class NaurelliaModeration extends JavaPlugin {
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
 
+        // TODO : Réaménager les Managers pour fluidifier le code
+        // TODO : JavaDoc
+
         /*
         Commands
          */
@@ -51,23 +55,18 @@ public final class NaurelliaModeration extends JavaPlugin {
         Objects.requireNonNull(getCommand("staffchat")).setExecutor(new StaffChatCommand());
         Objects.requireNonNull(getCommand("openinv")).setExecutor(new OpenInvCommand());
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvseeCommand());
+        Objects.requireNonNull(getCommand("chatfilter")).setExecutor(new ChatFilterCommand());
+        Objects.requireNonNull(getCommand("raidmode")).setExecutor(new RaidModeCommand());
         // TODO : Vanish command
-        // TODO : reports command
-        // TODO : anti spam
         // TODO : anti flood
         // TODO : anti caps
-        // TODO : anti pub
-        // TODO : Add word to blacklist command
-        // TODO : Remove word from blacklist command
-        // TODO : Blacklist command
-        // TODO : Raid command
         // TODO : infractions command
         // TODO : staffcommands command
 
         /*
         Completer
          */
-
+        Objects.requireNonNull(getCommand("chatfilter")).setTabCompleter(new ChatFilterCompleter());
 
         /*
         Tests
@@ -96,6 +95,8 @@ public final class NaurelliaModeration extends JavaPlugin {
         // Plugin shutdown logic
 
         FilesReader.writeOfflineInfractions();
+        FilesReader.writeStrings();
+
         //TODO Save Connections
         Database.closeAll();
     }

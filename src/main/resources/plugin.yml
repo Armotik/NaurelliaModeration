@@ -52,3 +52,9 @@ commands:
   invsee:
     description: open the inventory of a player but can't interact with it
     permission: naurellia.staff.helper
+  chatfilter:
+    description: manage the chat filter
+    permission: naurellia.staff.admin
+  raidmode:
+    description: manage the raid mode
+    permission: naurellia.staff.admin

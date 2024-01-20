@@ -1,4 +1,4 @@
-package fr.armotik.naurelliamoderation.reports;
+package fr.armotik.naurelliamoderation.utilsclasses;
 
 import java.util.ArrayList;
 import java.util.List;
