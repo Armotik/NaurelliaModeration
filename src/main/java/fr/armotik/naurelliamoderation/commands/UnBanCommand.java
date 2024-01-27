@@ -84,14 +84,16 @@ public class UnBanCommand implements CommandExecutor {
                     Player player = ((Player) sender).getPlayer();
                     UUID targetUUID = UUID.fromString(res.getString("uuid"));
 
-                    Bukkit.getBanList(BanList.Type.PROFILE).getEntries().forEach(banEntry -> {
+                    if (!Bukkit.getOfflinePlayer(targetUUID).isBanned()) {
 
-                        if (Objects.requireNonNull(Bukkit.getOfflinePlayer(targetUUID).getName()).equalsIgnoreCase(banEntry.getTarget())) {
+                            TextComponent msg = new TextComponent(Louise.getName() + " §7» §c" + args[0] + " §cis not banned.");
+                            msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
 
-                            SanctionsManager.unBan(player, Bukkit.getOfflinePlayer(targetUUID));
+                            sender.spigot().sendMessage(msg);
+                            return false;
+                    }
 
-                        }
-                    });
+                    SanctionsManager.unBan(player, Bukkit.getOfflinePlayer(targetUUID));
 
                     return true;
                 }

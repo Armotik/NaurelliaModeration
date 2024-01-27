@@ -29,6 +29,7 @@
 
 All the changelogs are available in the [changelogs'](changelogs) folder.
 
+- [27-01-2024 - Changelog](changelogs/%5B27-01-2024%5D%20-%20Changelog.md)
 - [21-01-2024 - Changelog](changelogs/%5B21-01-2024%5D%20-%20Changelog.md)
 - [20-01-2024 - Changelog](changelogs/%5B20-01-2024%5D%20-%20Changelog.md)
 
@@ -40,6 +41,6 @@ You can contact me at `contact@naurellia.com` or on Discord `https://discord.gg/
 
 ---
 
-last update : 21/01/2024
+last update : 27/01/2024
 
 &copy; 2024 NaurelliaCraft

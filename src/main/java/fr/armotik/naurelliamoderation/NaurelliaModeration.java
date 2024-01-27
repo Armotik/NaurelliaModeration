@@ -40,7 +40,6 @@ public final class NaurelliaModeration extends JavaPlugin {
         /*
         Commands
          */
-        // TODO : Gestion des ATL et des comptes sur une seule ip
         Objects.requireNonNull(getCommand("warn")).setExecutor(new WarnCommand());
         Objects.requireNonNull(getCommand("tempmute")).setExecutor(new TempmuteCommand());
         Objects.requireNonNull(getCommand("tempban")).setExecutor(new TempbanCommand());
@@ -57,11 +56,13 @@ public final class NaurelliaModeration extends JavaPlugin {
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvseeCommand());
         Objects.requireNonNull(getCommand("chatfilter")).setExecutor(new ChatFilterCommand());
         Objects.requireNonNull(getCommand("raidmode")).setExecutor(new RaidModeCommand());
-        // TODO : Vanish command
+        Objects.requireNonNull(getCommand("connections")).setExecutor(new ConnectionsCommand());
+        Objects.requireNonNull(getCommand("vanish")).setExecutor(new VanishCommand());
         // TODO : anti flood
         // TODO : anti caps
         // TODO : infractions command
-        // TODO : staffcommands command
+        // TODO : ip blacklist command
+        // TODO : ip whitelist command
 
         /*
         Completer
@@ -96,6 +97,7 @@ public final class NaurelliaModeration extends JavaPlugin {
 
         FilesReader.writeOfflineInfractions();
         FilesReader.writeStrings();
+        FilesReader.writeConnections();
 
         //TODO Save Connections
         Database.closeAll();

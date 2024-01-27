@@ -1,10 +1,12 @@
 package fr.armotik.naurelliamoderation.guis;
 
+import fr.armotik.naurelliamoderation.listerners.ConnectionsManager;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -14,15 +16,18 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 
 public class ItemsModMenuGui {
 
     private final Inventory inventory;
     private final OfflinePlayer target;
+    private final Player player;
 
-    public ItemsModMenuGui(Inventory inv, OfflinePlayer target) {
+    public ItemsModMenuGui(Inventory inv, OfflinePlayer target, Player player) {
         this.inventory = inv;
         this.target = target;
+        this.player = player;
     }
 
     public void mainMenuGui(){
@@ -53,6 +58,11 @@ public class ItemsModMenuGui {
 
         // Vanish
         ItemStack vanish = GuiManager.headFactory("http://textures.minecraft.net/texture/a86c97159cd658858d12b833d1671b84529e1f116d8be379d43824cb17963bb");
+
+        if (player.isInvisible()) {
+
+            vanish = GuiManager.headFactory("http://textures.minecraft.net/texture/7ca6eabed620fd1c3579dbe6568f7427b32a09f731dc8b745504058c9853449");
+        }
 
         ItemMeta vanishMeta = vanish.getItemMeta();
         assert vanishMeta != null;
@@ -113,6 +123,32 @@ public class ItemsModMenuGui {
         infractionCountMeta.setDisplayName(title);
         infractionCountMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+        // Connections count
+        ItemStack connections = GuiManager.headFactory("http://textures.minecraft.net/texture/0b7a67087da884a25fc547ee1ba3d9bdcbf726bda6deb7744c6c52c264a");
+
+        ItemMeta connectionsMeta = connections.getItemMeta();
+        assert connectionsMeta != null;
+
+        if (target.isOnline() || ConnectionsManager.getConnections().containsKey(target.getUniqueId())) {
+
+            String connectionTitle = "§cConnections Count : " + ConnectionsManager.getPlayersFromIP(Objects.requireNonNull(Objects.requireNonNull(target.getPlayer()).getAddress()).getAddress()).size();
+
+            connectionsMeta.setDisplayName(connectionTitle);
+        } else {
+
+                connectionsMeta.setDisplayName("§cConnections Count : §4Offline");
+        }
+
+        connectionsMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        // TELEPORT
+        ItemStack teleport = GuiManager.headFactory("http://textures.minecraft.net/texture/9fc32c914276f686141796a5a023c39efdfed14d3d7c9c42792513846f7fa4b3");
+
+        ItemMeta teleportMeta = teleport.getItemMeta();
+        assert teleportMeta != null;
+        teleportMeta.setDisplayName("§aTeleport");
+        teleportMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         playerHead.setItemMeta(playerHeadMeta);
         sanctions.setItemMeta(sanctionsMeta);
         infraction.setItemMeta(infractionMeta);
@@ -121,6 +157,8 @@ public class ItemsModMenuGui {
         freeze.setItemMeta(freezeMeta);
         glassPane.setItemMeta(glassPaneMeta);
         infractionCount.setItemMeta(infractionCountMeta);
+        teleport.setItemMeta(teleportMeta);
+        connections.setItemMeta(connectionsMeta);
 
         for (int i = 9; i < 18; i++) {
             inventory.setItem(i, glassPane);
@@ -132,6 +170,8 @@ public class ItemsModMenuGui {
         inventory.setItem(32, vanish);
         inventory.setItem(34, openInventory);
         inventory.setItem(0, freeze);
+        inventory.setItem(2, teleport);
+        inventory.setItem(6, connections);
         inventory.setItem(8, infractionCount);
     }
 }

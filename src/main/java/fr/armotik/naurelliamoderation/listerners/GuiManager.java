@@ -26,7 +26,7 @@ public class GuiManager implements Listener {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targUUID);
 
             Inventory inv = Bukkit.createInventory(null, 45, "§6Moderation Menu : §c§l" + offlinePlayer.getName());
-            ItemsModMenuGui itemsGUIS = new ItemsModMenuGui(inv, offlinePlayer);
+            ItemsModMenuGui itemsGUIS = new ItemsModMenuGui(inv, offlinePlayer, player);
 
             itemsGUIS.mainMenuGui();
 

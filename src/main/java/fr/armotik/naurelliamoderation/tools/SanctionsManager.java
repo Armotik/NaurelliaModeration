@@ -322,12 +322,25 @@ public class SanctionsManager implements Listener {
          */
         if (reason == null || reason.trim().equalsIgnoreCase("")) reason = DEFAULT_REASON;
 
-        int req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
-                "VALUES ('" + target.getUniqueId() + "','KICK','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
+        int req = 0;
+
+        if (staff == null) {
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+                    "VALUES ('" + target.getUniqueId() + "','KICK','" + reason + "'," + null + ",'" + LOCAL_DATE.format(FORMATTER) + "');");
+        } else {
+
+
+            req = Database.executeUpdate("INSERT INTO Infractions (targetUUID, infractionType, reason, staffUUID, infractionDate) " +
+                    "VALUES ('" + target.getUniqueId() + "','KICK','" + reason + "','" + staff.getUniqueId() + "','" + LOCAL_DATE.format(FORMATTER) + "');");
+        }
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            if (staff != null) {
+                staff.sendMessage(Louise.commandError());
+            }
+
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : kick ERROR - req <= 0");
             Database.close();
             return;
@@ -335,9 +348,11 @@ public class SanctionsManager implements Listener {
 
         target.kickPlayer("§cYou have been kicked \n\n§cREASON : §f§l" + reason);
 
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully kicked");
+        if (staff != null) {
 
-        logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " has been kicked by " + staff.getName() + " for " + reason);
+            staff.sendMessage(Louise.getName() + "§aPlayer successfully kicked");
+            logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " has been kicked by " + staff.getName() + " for " + reason);
+        }
 
         Database.close();
     }
@@ -553,12 +568,12 @@ public class SanctionsManager implements Listener {
      */
     public static void unBan(Player staff, OfflinePlayer target) {
 
-        int req = Database.executeUpdate("UPDATE Infractions SET infractionStatus=false WHERE targetUUID='\" + target.getUniqueId() + \"' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
+        int req = Database.executeUpdate("UPDATE Infractions SET infractionStatus=false WHERE targetUUID='" + target.getUniqueId() + "' AND (infractiontype='BAN' OR infractiontype='TEMPBAN') AND infractionstatus=true;");
 
         if (req <= 0) {
 
             staff.sendMessage(Louise.commandError());
-            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unmute ERROR - req <= 0");
+            logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unban ERROR - req <= 0");
             Database.close();
             return;
         }
@@ -569,7 +584,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully unmuted");
+            staff.sendMessage(Louise.getName() + "§aPlayer successfully unbanned");
         }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " is now unbanned");

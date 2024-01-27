@@ -1,6 +1,7 @@
 package fr.armotik.naurelliamoderation.utiles;
 
 import fr.armotik.naurelliamoderation.listerners.ChatFilter;
+import fr.armotik.naurelliamoderation.listerners.ConnectionsManager;
 import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 
@@ -11,9 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -22,6 +21,9 @@ public class FilesReader {
 
     private static final Logger logger = Logger.getLogger(FilesReader.class.getName());
 
+    /**
+     * Constructor
+     */
     private FilesReader() {
 
         throw new IllegalStateException("Utility Class");
@@ -79,6 +81,7 @@ public class FilesReader {
 
     /**
      * Read Infractions saved on the offlineInfractions file
+     *
      * @return Map of UUID and String of infractions
      */
     public static Map<UUID, String> readOfflineInfractions() {
@@ -149,9 +152,14 @@ public class FilesReader {
         }
     }
 
-    public static Map<UUID, InetAddress> readConnections() {
+    /**
+     * Read connections from the database
+     *
+     * @return Map of UUID and List of InetAddress
+     */
+    public static Map<UUID, List<InetAddress>> readConnections() {
 
-        Map<UUID, InetAddress> connections = new HashMap<>();
+        Map<UUID, List<InetAddress>> connections = new HashMap<>();
 
         try (Connection conn = Database.getConnection()) {
 
@@ -167,7 +175,21 @@ public class FilesReader {
 
                 while (res.next()) {
 
-                    connections.put(UUID.fromString(res.getString("uuid")), InetAddress.getByName(res.getString("address")));
+                    InetAddress address = InetAddress.getByName(res.getString("address"));
+                    UUID uuid = UUID.fromString(res.getString("uuid"));
+
+                    if (!connections.containsKey(uuid)) {
+
+                        List<InetAddress> addresses = new ArrayList<>();
+                        addresses.add(address);
+
+                        connections.put(uuid, addresses);
+                    }
+
+                    if (!connections.get(uuid).contains(address)) {
+
+                        connections.get(uuid).add(address);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -181,6 +203,9 @@ public class FilesReader {
         return connections;
     }
 
+    /**
+     * Read reports from the database
+     */
     public static void readReports() {
 
         try (Connection conn = Database.getConnection()) {
@@ -198,6 +223,31 @@ public class FilesReader {
                 while (res.next()) {
 
                     new Report(UUID.fromString(res.getString("reporter_uuid")), UUID.fromString(res.getString("target_uuid")), res.getString("reason"), res.getString("report_date"), res.getBoolean("isTreated"));
+                }
+            }
+        } catch (SQLException e) {
+            ExceptionsManager.sqlExceptionLog(e);
+        }
+    }
+
+    /**
+     * Write connections to the database
+     */
+    public static void writeConnections() {
+
+        try (Connection conn = Database.getConnection()) {
+
+            assert conn != null;
+
+            try (Statement statement = conn.createStatement()) {
+
+                for (UUID uuid : ConnectionsManager.getConnections().keySet()) {
+
+                    for (InetAddress address : ConnectionsManager.getConnections().get(uuid)) {
+
+                        statement.executeUpdate("REPLACE INTO Connections (uuid, address) " +
+                                "VALUES ('" + uuid.toString() + "', '" + address.getHostAddress() + "')");
+                    }
                 }
             }
         } catch (SQLException e) {

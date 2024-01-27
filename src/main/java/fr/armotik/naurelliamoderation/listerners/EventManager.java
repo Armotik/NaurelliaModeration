@@ -7,6 +7,7 @@ import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
 import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.naurelliamoderation.utilsclasses.ResultCodeType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,11 +32,12 @@ import java.util.logging.Logger;
 public class EventManager implements Listener {
 
     private final Logger logger = Logger.getLogger(EventManager.class.getName());
-    private static Map<UUID, Boolean> frozen = new HashMap<>();
+    private static final Map<UUID, Boolean> frozen = new HashMap<>();
 
     public static Map<UUID, Boolean> getFrozen() {
         return frozen;
     }
+
     private static boolean raidMode = false;
 
     public static boolean isRaidMode() {
@@ -57,7 +60,7 @@ public class EventManager implements Listener {
             assert conn != null;
 
             try (Statement statement = conn.createStatement();
-            ResultSet res = statement.executeQuery("SELECT permission FROM PlayersPermissions WHERE player_uuid='" + uuid + "'");
+                 ResultSet res = statement.executeQuery("SELECT permission FROM PlayersPermissions WHERE player_uuid='" + uuid + "'");
             ) {
                 if (res == null) {
 
@@ -95,17 +98,28 @@ public class EventManager implements Listener {
             SanctionsManager.checkInfractions(player);
         }
 
-        if (!ConnectionsManager.ConnectionChecker(player)) {
+        ResultCodeType result = ConnectionsManager.ConnectionChecker(player);
 
-            player.kickPlayer("§cCONNECTION REFUSED - VPN");
+        if (result == ResultCodeType.VPN && !player.hasPermission("naurellia.staff.helper")) {
+
+            SanctionsManager.kick(null, player, "CONNECTION REFUSED - VPN");
             logger.log(Level.INFO, player.getName() + "[NaurelliaModeration] -> kicked (CONNECTION REFUSED - VPN) ");
         }
+
+        if (result == ResultCodeType.TOO_MANY_ACCOUNTS && !player.hasPermission("naurellia.staff.helper")) {
+
+            SanctionsManager.kick(null, player, "CONNECTION REFUSED - TOO MANY ACCOUNTS");
+            logger.log(Level.INFO, player.getName() + "[NaurelliaModeration] -> kicked (CONNECTION REFUSED - TOO MANY ACCOUNTS) ");
+        }
+
+        ConnectionsManager.addConnection(player.getUniqueId(), Objects.requireNonNull(player.getAddress()).getAddress());
+        ConnectionsManager.displayPlayersOnJoin(Objects.requireNonNull(player.getAddress()).getAddress());
     }
 
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
 
-        if (!event.getSender().isOp()) {
+        if (!event.getSender().hasPermission("naurellia.staff.helper")) {
 
             if (event.getBuffer().startsWith("naurelliamoderation:")) {
                 event.setCancelled(true);
@@ -238,13 +252,21 @@ public class EventManager implements Listener {
                     switch (Objects.requireNonNull(current.getItemMeta()).getDisplayName()) {
 
                         case "§aOpen Inventory" -> {
+
+                            if (!target.isOnline()) {
+
+                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.getOpenInventory().close();
+                            }
+
                             player.getOpenInventory().close();
                             player.openInventory(Objects.requireNonNull(target.getPlayer()).getInventory());
-                            break;
                         }
 
                         case "§aVanish" -> {
-                            // Todo
+
+                            player.performCommand("vanish");
+                            player.getOpenInventory().close();
                         }
 
                         case "§bFreeze" -> {
@@ -268,11 +290,21 @@ public class EventManager implements Listener {
                                 Objects.requireNonNull(target.getPlayer()).sendMessage(Louise.getName() + "§aYou've been frozen by " + player.getName() + "§a !");
                                 player.getOpenInventory().close();
                             }
-                            break;
                         }
 
                         case "§cSanctions" -> {
                             GuiManager.modGui(player, target.getUniqueId());
+                        }
+
+                        case "§aTeleport" -> {
+                            if (!target.isOnline()) {
+
+                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.getOpenInventory().close();
+                            }
+
+                            player.teleport(Objects.requireNonNull(target.getPlayer()));
+                            player.getOpenInventory().close();
                         }
 
                         default -> {
@@ -341,6 +373,14 @@ public class EventManager implements Listener {
 
                     if (report == null || report.isTreated()) return;
 
+                    if ((report.getTarget_uuid() == player.getUniqueId()) && !player.hasPermission("naurellia.staff.admin")) {
+
+                        player.sendMessage(Louise.getName() + "§cYou can't resolve a report against you !");
+                        player.getOpenInventory().close();
+                        GuiManager.reportGui(player, 1);
+                        return;
+                    }
+
                     try (Connection conn = Database.getConnection()) {
 
                         assert conn != null;
@@ -353,6 +393,11 @@ public class EventManager implements Listener {
                             player.getOpenInventory().close();
                             player.sendMessage(Louise.getName() + "§aYou resolved the report §6#" + id + "§a !");
                             GuiManager.reportGui(player, 1);
+
+                            if (Bukkit.getOfflinePlayer(report.getReporter_uuid()).isOnline()) {
+
+                                Objects.requireNonNull(Bukkit.getPlayer(report.getReporter_uuid())).sendMessage(Louise.getName() + "§aYour report §6#" + id + "about : " + report.getReason() +"§a has been resolved by §c" + player.getName() + "§a !");
+                            }
                         }
                     } catch (SQLException e) {
 

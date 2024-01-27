@@ -58,3 +58,11 @@ commands:
   raidmode:
     description: manage the raid mode
     permission: naurellia.staff.admin
+  connections:
+    description: get the connections of a player
+    permission: naurellia.staff.helper
+  vanish:
+    description: vanish
+    permission: naurellia.staff.helper
+    aliases:
+      - v
