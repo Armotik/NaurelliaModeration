@@ -58,9 +58,6 @@ public final class NaurelliaModeration extends JavaPlugin {
         Objects.requireNonNull(getCommand("raidmode")).setExecutor(new RaidModeCommand());
         Objects.requireNonNull(getCommand("connections")).setExecutor(new ConnectionsCommand());
         Objects.requireNonNull(getCommand("vanish")).setExecutor(new VanishCommand());
-        // TODO : anti flood
-        // TODO : anti caps
-        // TODO : infractions command
         // TODO : ip blacklist command
         // TODO : ip whitelist command
 

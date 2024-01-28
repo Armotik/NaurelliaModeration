@@ -7,11 +7,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ItemModifyReportGUi {
+public class ItemModifyReportGui {
 
     private final Inventory inventory;
 
-    public ItemModifyReportGUi(Inventory inv, Report report) {
+    public ItemModifyReportGui(Inventory inv, Report report) {
         this.inventory = inv;
     }
 

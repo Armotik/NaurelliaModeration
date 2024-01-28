@@ -21,7 +21,8 @@
 - Main Menu GUI (Access to all the other GUIS)
 - Report GUI (Get the player's information and the reason of the report and be able to treat it)
 - Reports GUI (Get all the reports, click on one to open the Report GUI)
-- Infractions GUI (Apply a predefine sanction to a player)
+- Sanctions GUI (Apply a predefine sanction to a player)
+- Infractions GUI (Get all the infractions of a player)
 
 ---
 
@@ -29,6 +30,7 @@
 
 All the changelogs are available in the [changelogs'](changelogs) folder.
 
+- [28-01-2024 - Changelog](changelogs/%5B28-01-2024%5D%20-%20Changelog.md)
 - [27-01-2024 - Changelog](changelogs/%5B27-01-2024%5D%20-%20Changelog.md)
 - [21-01-2024 - Changelog](changelogs/%5B21-01-2024%5D%20-%20Changelog.md)
 - [20-01-2024 - Changelog](changelogs/%5B20-01-2024%5D%20-%20Changelog.md)
@@ -41,6 +43,6 @@ You can contact me at `contact@naurellia.com` or on Discord `https://discord.gg/
 
 ---
 
-last update : 27/01/2024
+last update : 28/01/2024
 
 &copy; 2024 NaurelliaCraft

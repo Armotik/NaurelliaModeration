@@ -130,6 +130,34 @@ public class ChatFilter implements Listener {
             }
         }
 
+        // Anti caps
+        if (message.length() > 5) {
+
+            int caps = 0;
+
+            for (int i = 0; i < message.length(); i++) {
+
+                if (Character.isUpperCase(message.charAt(i))) {
+
+                    caps++;
+                }
+            }
+
+            if (caps > message.length() / 2 && !player.hasPermission("naurellia.staff.helper")) {
+
+                event.setCancelled(true);
+                TextComponent msg = new TextComponent(Louise.getName() + "§cToo many caps in your message !");
+                msg.setHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
+                ));
+                msg.setClickEvent(new ClickEvent(
+                        ClickEvent.Action.OPEN_URL, "https://www.naurelliacraft.com/rules/#chat"
+                ));
+
+                player.spigot().sendMessage(msg);
+            }
+        }
+
         if (lastMessageTime.containsKey(player)) {
 
             if (System.currentTimeMillis() - lastMessageTime.get(player) < TIME_BETWEEN_MESSAGES) {
@@ -139,7 +167,7 @@ public class ChatFilter implements Listener {
                 if (messageCount.get(player) > MAX_MESSAGES && !player.hasPermission("naurellia.staff.helper")) {
 
                     SanctionsManager.tempmute(null, player.getUniqueId(), "CHATFILTER - SPAM", TimeUnit.HOURS.toMillis(1));
-                } else if (messageCount.get(player) == MAX_MESSAGES && player.hasPermission("naurellia.staff.helper")) {
+                } else if (messageCount.get(player) == MAX_MESSAGES && !player.hasPermission("naurellia.staff.helper")) {
 
                     SanctionsManager.warn(null, player.getUniqueId(), "CHATFILTER - SPAM");
                 }

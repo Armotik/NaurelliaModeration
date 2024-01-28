@@ -129,7 +129,7 @@ public class ItemsModMenuGui {
         ItemMeta connectionsMeta = connections.getItemMeta();
         assert connectionsMeta != null;
 
-        if (target.isOnline() || ConnectionsManager.getConnections().containsKey(target.getUniqueId())) {
+        if (target.isOnline()) {
 
             String connectionTitle = "§cConnections Count : " + ConnectionsManager.getPlayersFromIP(Objects.requireNonNull(Objects.requireNonNull(target.getPlayer()).getAddress()).getAddress()).size();
 
@@ -149,6 +149,14 @@ public class ItemsModMenuGui {
         teleportMeta.setDisplayName("§aTeleport");
         teleportMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
+        // REPORTS
+        ItemStack reports = GuiManager.headFactory("http://textures.minecraft.net/texture/adc3a4ea4b9dc41daeb83f142baae74836b1b970824c5bb0a738253ed870a23d");
+
+        ItemMeta reportsMeta = reports.getItemMeta();
+        assert reportsMeta != null;
+        reportsMeta.setDisplayName("§6Reports");
+        reportsMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         playerHead.setItemMeta(playerHeadMeta);
         sanctions.setItemMeta(sanctionsMeta);
         infraction.setItemMeta(infractionMeta);
@@ -159,6 +167,7 @@ public class ItemsModMenuGui {
         infractionCount.setItemMeta(infractionCountMeta);
         teleport.setItemMeta(teleportMeta);
         connections.setItemMeta(connectionsMeta);
+        reports.setItemMeta(reportsMeta);
 
         for (int i = 9; i < 18; i++) {
             inventory.setItem(i, glassPane);
@@ -173,5 +182,6 @@ public class ItemsModMenuGui {
         inventory.setItem(2, teleport);
         inventory.setItem(6, connections);
         inventory.setItem(8, infractionCount);
+        inventory.setItem(22, reports);
     }
 }

@@ -28,7 +28,7 @@ commands:
     aliases:
       - mod
   infractions:
-    description: get the infractions of a player
+    description: open the infractions GUI
     permission: naurellia.staff.helper
   freeze:
     description: freeze a player

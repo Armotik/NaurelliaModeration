@@ -76,9 +76,19 @@ public class GuiManager implements Listener {
     public static void modifyReportGui(Player player, Report report) {
 
         Inventory inv = Bukkit.createInventory(null, 9, "§cReport : §6" + report.getId());
-        ItemModifyReportGUi itemModifyReportGUi = new ItemModifyReportGUi(inv, report);
+        ItemModifyReportGui itemModifyReportGUi = new ItemModifyReportGui(inv, report);
 
         itemModifyReportGUi.modifyReportGui();
+
+        player.openInventory(inv);
+    }
+
+    public static void infractionsGui(Player player, OfflinePlayer target, int page) {
+
+        Inventory inv = Bukkit.createInventory(null, 54, "§cInfractions : §6" + target.getName());
+        ItemsInfractionsGui itemsGUIS = new ItemsInfractionsGui(inv, target, player, page);
+
+        itemsGUIS.infractionsGui();
 
         player.openInventory(inv);
     }

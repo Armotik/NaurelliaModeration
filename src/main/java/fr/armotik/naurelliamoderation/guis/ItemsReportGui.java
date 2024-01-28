@@ -33,7 +33,7 @@ public class ItemsReportGui {
         List<Report> subList = new ArrayList<>();
 
         for (Report report : Report.getReports()) {
-            if (Objects.requireNonNull(Bukkit.getServer().getPlayer(report.getTarget_uuid())).isOnline() && !report.isTreated()) {
+            if (Bukkit.getOfflinePlayer(report.getTarget_uuid()).isOnline() && !report.isTreated()) {
                 subList.add(report);
             }
         }

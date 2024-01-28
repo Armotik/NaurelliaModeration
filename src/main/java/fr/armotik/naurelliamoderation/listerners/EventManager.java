@@ -307,6 +307,74 @@ public class EventManager implements Listener {
                             player.getOpenInventory().close();
                         }
 
+                        case "§cInfractions" -> {
+                            GuiManager.infractionsGui(player, target, 1);
+                        }
+
+                        case "§6Reports" -> {
+                            GuiManager.reportGui(player, 1);
+                        }
+
+                        default -> {
+                        }
+                    }
+                }
+            }
+
+            if (player.getOpenInventory().getTitle().startsWith("§cInfractions : §6")) {
+
+                event.setCancelled(true);
+
+                ItemStack current = event.getCurrentItem();
+
+                int page = Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(event.getClickedInventory()).getItem(49)).getItemMeta()).getDisplayName().split("§6")[1]);
+
+                OfflinePlayer target = null;
+
+                try (Connection conn = Database.getConnection()) {
+
+                    assert conn != null;
+
+                    try (Statement statement = conn.createStatement();
+                         ResultSet res = statement.executeQuery("SELECT uuid FROM Players WHERE ign='" + player.getOpenInventory().getTitle().split("§6")[1] + "'");
+                    ) {
+                        if (res == null) {
+
+                            logger.log(Level.WARNING, "[NaurelliaModeration] -> EventManager : onInventoryClick ERROR - res == null");
+                            return;
+                        }
+
+                        if (res.next()) {
+
+                            target = Bukkit.getOfflinePlayer(UUID.fromString(res.getString("uuid")));
+                        }
+                    }
+                } catch (SQLException e) {
+
+                    ExceptionsManager.sqlExceptionLog(e);
+                    return;
+                }
+
+                if (target == null) {
+
+                    player.sendMessage(Louise.playerNotFound());
+                    return;
+                }
+
+                if (current.getType() == Material.PLAYER_HEAD) {
+
+                    switch (Objects.requireNonNull(current.getItemMeta()).getDisplayName()) {
+
+                        case "§cNext Page" -> {
+                            player.getOpenInventory().close();
+                            GuiManager.infractionsGui(player, target, page + 1);
+                        }
+
+                        case "§cPrevious Page" -> {
+                            player.getOpenInventory().close();
+                            GuiManager.infractionsGui(player, target, page - 1);
+                        }
+
                         default -> {
                         }
                     }
@@ -396,7 +464,7 @@ public class EventManager implements Listener {
 
                             if (Bukkit.getOfflinePlayer(report.getReporter_uuid()).isOnline()) {
 
-                                Objects.requireNonNull(Bukkit.getPlayer(report.getReporter_uuid())).sendMessage(Louise.getName() + "§aYour report §6#" + id + "about : " + report.getReason() +"§a has been resolved by §c" + player.getName() + "§a !");
+                                Objects.requireNonNull(Bukkit.getPlayer(report.getReporter_uuid())).sendMessage(Louise.getName() + "§aYour report §6#" + id + " about : " + report.getReason() +"§a has been resolved by §c" + player.getName() + "§a !");
                             }
                         }
                     } catch (SQLException e) {
