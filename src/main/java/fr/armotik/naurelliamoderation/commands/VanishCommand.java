@@ -1,6 +1,6 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.NaurelliaModeration;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -27,18 +27,10 @@ public class VanishCommand implements CommandExecutor {
                 p.showPlayer(NaurelliaModeration.getPlugin(), player);
             }
 
-            player.sendMessage(Louise.getName() + "§cYou are now visible !");
+            player.sendMessage(LouiseModeration.getName() + "§cYou are now visible !");
 
         } else {
-            /*
-            -> set invisible
-            -> set invisible to all players (except staff) on the tablist
-            -> set invulnerable
-            -> set flying
-            -> set gamemode spectator
-            -> set allow flight
-            -> disable potion effects
-             */
+
             player.setInvisible(true);
             player.setInvulnerable(true);
             player.setAllowFlight(true);
@@ -52,7 +44,7 @@ public class VanishCommand implements CommandExecutor {
                 }
             }
 
-            player.sendMessage(Louise.getName() + "§aYou are now invisible !");
+            player.sendMessage(LouiseModeration.getName() + "§aYou are now invisible !");
         }
         return true;
     }

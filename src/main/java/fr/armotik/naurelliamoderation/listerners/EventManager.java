@@ -1,13 +1,13 @@
 package fr.armotik.naurelliamoderation.listerners;
 
-import fr.armotik.naurelliamoderation.Louise;
 import fr.armotik.naurelliamoderation.commands.BanCommand;
 import fr.armotik.naurelliamoderation.commands.KickCommand;
 import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.utilsclasses.ResultCodeType;
+import fr.armotik.louise.utiles.ExceptionsManager;
+import fr.armotik.louise.louise.LouiseModeration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -19,7 +19,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -137,7 +136,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
 
             if (!event.getPlayer().hasPermission("naurellia.staff.admin")) {
-                event.getPlayer().sendMessage(Louise.permissionMissing());
+                event.getPlayer().sendMessage(LouiseModeration.permissionMissing());
             } else {
 
                 String[] args = event.getMessage().split(" ");
@@ -152,7 +151,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
 
             if (!event.getPlayer().hasPermission("naurellia.staff.admin")) {
-                event.getPlayer().sendMessage(Louise.permissionMissing());
+                event.getPlayer().sendMessage(LouiseModeration.permissionMissing());
             } else {
 
                 String[] args = event.getMessage().split(" ");
@@ -167,7 +166,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
 
             if (!event.getPlayer().hasPermission("naurellia.staff.helper")) {
-                event.getPlayer().sendMessage(Louise.permissionMissing());
+                event.getPlayer().sendMessage(LouiseModeration.permissionMissing());
             } else {
 
                 String[] args = event.getMessage().split(" ");
@@ -186,7 +185,7 @@ public class EventManager implements Listener {
         if (getFrozen().containsKey(player.getUniqueId())) {
 
             event.setCancelled(true);
-            player.sendMessage(Louise.getName() + "§cYou're frozen, you can't move !");
+            player.sendMessage(LouiseModeration.getName() + "§cYou're frozen, you can't move !");
         }
     }
 
@@ -204,7 +203,7 @@ public class EventManager implements Listener {
                 (player.hasPermission("naurellia.staff.helper") && !player.hasPermission("naurellia.staff.srmod"))) {
 
             event.setCancelled(true);
-            player.sendMessage(Louise.getName() + "§cYou can't interact with this inventory !");
+            player.sendMessage(LouiseModeration.getName() + "§cYou can't interact with this inventory !");
             return;
         }
 
@@ -243,7 +242,7 @@ public class EventManager implements Listener {
 
                 if (target == null) {
 
-                    player.sendMessage(Louise.playerNotFound());
+                    player.sendMessage(LouiseModeration.playerNotFound());
                     return;
                 }
 
@@ -255,7 +254,7 @@ public class EventManager implements Listener {
 
                             if (!target.isOnline()) {
 
-                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.sendMessage(LouiseModeration.getName() + "§cThis player is not online !");
                                 player.getOpenInventory().close();
                             }
 
@@ -273,21 +272,21 @@ public class EventManager implements Listener {
 
                             if (!target.isOnline()) {
 
-                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.sendMessage(LouiseModeration.getName() + "§cThis player is not online !");
                                 player.getOpenInventory().close();
                             }
 
                             if (getFrozen().containsKey(target.getUniqueId())) {
 
                                 getFrozen().remove(target.getUniqueId());
-                                player.sendMessage(Louise.getName() + "§aYou unfroze " + target.getName() + "§a !");
-                                Objects.requireNonNull(target.getPlayer()).sendMessage(Louise.getName() + "§aYou've been unfrozen by " + player.getName() + "§a !");
+                                player.sendMessage(LouiseModeration.getName() + "§aYou unfroze " + target.getName() + "§a !");
+                                Objects.requireNonNull(target.getPlayer()).sendMessage(LouiseModeration.getName() + "§aYou've been unfrozen by " + player.getName() + "§a !");
                                 player.getOpenInventory().close();
                             } else {
 
                                 getFrozen().put(target.getUniqueId(), true);
-                                player.sendMessage(Louise.getName() + "§aYou froze " + target.getName() + "§a !");
-                                Objects.requireNonNull(target.getPlayer()).sendMessage(Louise.getName() + "§aYou've been frozen by " + player.getName() + "§a !");
+                                player.sendMessage(LouiseModeration.getName() + "§aYou froze " + target.getName() + "§a !");
+                                Objects.requireNonNull(target.getPlayer()).sendMessage(LouiseModeration.getName() + "§aYou've been frozen by " + player.getName() + "§a !");
                                 player.getOpenInventory().close();
                             }
                         }
@@ -299,7 +298,7 @@ public class EventManager implements Listener {
                         case "§aTeleport" -> {
                             if (!target.isOnline()) {
 
-                                player.sendMessage(Louise.getName() + "§cThis player is not online !");
+                                player.sendMessage(LouiseModeration.getName() + "§cThis player is not online !");
                                 player.getOpenInventory().close();
                             }
 
@@ -357,7 +356,7 @@ public class EventManager implements Listener {
 
                 if (target == null) {
 
-                    player.sendMessage(Louise.playerNotFound());
+                    player.sendMessage(LouiseModeration.playerNotFound());
                     return;
                 }
 
@@ -443,7 +442,7 @@ public class EventManager implements Listener {
 
                     if ((report.getTarget_uuid() == player.getUniqueId()) && !player.hasPermission("naurellia.staff.admin")) {
 
-                        player.sendMessage(Louise.getName() + "§cYou can't resolve a report against you !");
+                        player.sendMessage(LouiseModeration.getName() + "§cYou can't resolve a report against you !");
                         player.getOpenInventory().close();
                         GuiManager.reportGui(player, 1);
                         return;
@@ -459,19 +458,19 @@ public class EventManager implements Listener {
 
                             report.setTreated(true);
                             player.getOpenInventory().close();
-                            player.sendMessage(Louise.getName() + "§aYou resolved the report §6#" + id + "§a !");
+                            player.sendMessage(LouiseModeration.getName() + "§aYou resolved the report §6#" + id + "§a !");
                             GuiManager.reportGui(player, 1);
 
                             if (Bukkit.getOfflinePlayer(report.getReporter_uuid()).isOnline()) {
 
-                                Objects.requireNonNull(Bukkit.getPlayer(report.getReporter_uuid())).sendMessage(Louise.getName() + "§aYour report §6#" + id + " about : " + report.getReason() +"§a has been resolved by §c" + player.getName() + "§a !");
+                                Objects.requireNonNull(Bukkit.getPlayer(report.getReporter_uuid())).sendMessage(LouiseModeration.getName() + "§aYour report §6#" + id + " about : " + report.getReason() +"§a has been resolved by §c" + player.getName() + "§a !");
                             }
                         }
                     } catch (SQLException e) {
 
                         ExceptionsManager.sqlExceptionLog(e);
 
-                        player.sendMessage(Louise.getName() + "§cAn error occurred while resolving the report §6#" + id + "§c !");
+                        player.sendMessage(LouiseModeration.getName() + "§cAn error occurred while resolving the report §6#" + id + "§c !");
                         player.getOpenInventory().close();
                         GuiManager.reportGui(player, 1);
                     }
@@ -510,7 +509,7 @@ public class EventManager implements Listener {
 
                 if (target == null) {
 
-                    player.sendMessage(Louise.playerNotFound());
+                    player.sendMessage(LouiseModeration.playerNotFound());
                     return;
                 }
 

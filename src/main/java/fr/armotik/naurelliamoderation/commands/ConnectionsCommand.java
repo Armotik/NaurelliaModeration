@@ -1,10 +1,10 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.ConnectionsManager;
-import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
+
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -18,7 +18,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -28,7 +27,7 @@ public class ConnectionsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
-        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/connections <player>")));
 
         Logger logger = Logger.getLogger(ConnectionsCommand.class.getName());
@@ -64,7 +63,7 @@ public class ConnectionsCommand implements CommandExecutor {
 
                 if (target == null) {
 
-                    msg = new TextComponent(Louise.getName() + "§cPlayer not found or not connected");
+                    msg = new TextComponent(LouiseModeration.getName() + "§cPlayer not found or not connected");
                     commandSender.spigot().sendMessage(msg);
                     return false;
                 }

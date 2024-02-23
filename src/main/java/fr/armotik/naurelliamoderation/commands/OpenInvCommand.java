@@ -1,6 +1,6 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -22,7 +22,7 @@ public class OpenInvCommand implements CommandExecutor {
 
         if (strings.length == 0) {
 
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/openinv <player>")));
 
             player.spigot().sendMessage(msg);
@@ -32,17 +32,17 @@ public class OpenInvCommand implements CommandExecutor {
         Player target = Bukkit.getServer().getPlayer(strings[0]);
 
         if (target == null) {
-            player.sendMessage(Louise.getName() + "§cPlayer not found.");
+            player.sendMessage(LouiseModeration.getName() + "§cPlayer not found.");
             return false;
         }
 
         if (!target.isOnline()) {
-            player.sendMessage(Louise.getName() + "§cPlayer not online.");
+            player.sendMessage(LouiseModeration.getName() + "§cPlayer not online.");
             return false;
         }
 
         if (target == player) {
-            player.sendMessage(Louise.getName() + "§cYou can't open your own inventory.");
+            player.sendMessage(LouiseModeration.getName() + "§cYou can't open your own inventory.");
             return false;
         }
 

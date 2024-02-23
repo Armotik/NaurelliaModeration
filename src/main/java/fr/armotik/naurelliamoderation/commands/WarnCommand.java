@@ -1,9 +1,9 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -46,7 +46,7 @@ public class WarnCommand implements CommandExecutor {
 
         if (args.length == 0) {
 
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
 
             player.spigot().sendMessage(msg);
@@ -75,7 +75,7 @@ public class WarnCommand implements CommandExecutor {
 
                 if (!res.next()) {
 
-                    TextComponent msg = new TextComponent(Louise.playerNotFound());
+                    TextComponent msg = new TextComponent(LouiseModeration.playerNotFound());
                     msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/warn <player>")));
 
                     player.spigot().sendMessage(msg);

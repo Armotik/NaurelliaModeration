@@ -6,6 +6,7 @@ authors: [ Armotik ]
 description: Moderation plugin for NaurelliaCraft
 website: naurellia.com
 prefix: NaurelliaModeration
+depend: [Louise]
 commands:
   warn:
     description: warn a player

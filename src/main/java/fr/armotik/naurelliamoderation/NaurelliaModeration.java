@@ -1,5 +1,6 @@
 package fr.armotik.naurelliamoderation;
 
+import fr.armotik.louise.Louise;
 import fr.armotik.naurelliamoderation.commands.*;
 import fr.armotik.naurelliamoderation.completers.ChatFilterCompleter;
 import fr.armotik.naurelliamoderation.listerners.*;
@@ -17,6 +18,7 @@ public final class NaurelliaModeration extends JavaPlugin {
 
     private static NaurelliaModeration plugin;
     private static final Logger logger = Logger.getLogger(NaurelliaModeration.class.getName());
+    private static Louise louiseAPI;
 
     /**
      * @return plugin
@@ -24,13 +26,22 @@ public final class NaurelliaModeration extends JavaPlugin {
     public static NaurelliaModeration getPlugin() {return plugin;}
 
     /**
+     * @return louiseAPI
+     */
+    public static Louise getLouiseAPI() {return louiseAPI;}
+
+    /**
      * Plugin starts
      */
     @Override
     public void onEnable() {
         // Plugin startup logic
-        plugin = this;
         logger.log(Level.INFO, "[NaurelliaModeration] -> NaurelliaModeration is loading ...");
+
+        plugin = this;
+
+        setupLouiseAPI();
+
         this.getConfig().options().copyDefaults(true);
         this.saveConfig();
 
@@ -86,6 +97,19 @@ public final class NaurelliaModeration extends JavaPlugin {
         logger.log(Level.INFO, "[NaurelliaModeration] -> Successfully loaded NaurelliaModeration");
 
         moderationLoop();
+    }
+
+    private void setupLouiseAPI() {
+        Louise plugin = Louise.getInstance();
+
+        if (plugin == null || !plugin.isEnabled()) {
+            logger.log(Level.SEVERE, "[NaurelliaModeration] -> Louise not found !");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        louiseAPI = plugin;
+        logger.info("[NaurelliaModeration] -> LouiseAPI is loaded !");
     }
 
     @Override

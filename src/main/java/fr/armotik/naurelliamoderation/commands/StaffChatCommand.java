@@ -1,6 +1,6 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -15,7 +15,7 @@ public class StaffChatCommand implements CommandExecutor {
 
         if (strings.length == 0) {
 
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/staffchat <message>")));
 
             commandSender.spigot().sendMessage(msg);

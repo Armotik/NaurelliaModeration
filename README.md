@@ -24,12 +24,15 @@
 - Sanctions GUI (Apply a predefine sanction to a player)
 - Infractions GUI (Get all the infractions of a player)
 
+This plugin includes my own plugin for management : Louise
+
 ---
 
 ### ChangeLogs
 
 All the changelogs are available in the [changelogs'](changelogs) folder.
 
+- [23-02-2024 - Changelog](changelogs/%5B23-02-2024%5D%20-%20Changelog.md)
 - [28-01-2024 - Changelog](changelogs/%5B28-01-2024%5D%20-%20Changelog.md)
 - [27-01-2024 - Changelog](changelogs/%5B27-01-2024%5D%20-%20Changelog.md)
 - [21-01-2024 - Changelog](changelogs/%5B21-01-2024%5D%20-%20Changelog.md)
@@ -43,6 +46,6 @@ You can contact me at `contact@naurellia.com` or on Discord `https://discord.gg/
 
 ---
 
-last update : 28/01/2024
+last update : 23/02/2024
 
 &copy; 2024 NaurelliaCraft

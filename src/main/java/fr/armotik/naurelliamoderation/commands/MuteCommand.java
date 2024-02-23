@@ -1,9 +1,9 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +39,7 @@ public class MuteCommand implements CommandExecutor {
 
         if (!(sender instanceof Player)) return false;
 
-        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/mute <player> <reason>")));
 
         Player player = ((Player) sender).getPlayer();

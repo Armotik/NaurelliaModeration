@@ -1,9 +1,10 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
+
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -43,7 +44,7 @@ public class ModerationCommand implements CommandExecutor {
 
         assert player != null;
 
-        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/mod <player>")));
 
         if (args.length != 1) {
@@ -60,14 +61,14 @@ public class ModerationCommand implements CommandExecutor {
                 if (res == null) {
 
                     logger.log(Level.WARNING, "[NaurelliaModeration] -> ModerationCommand : onCommand ERROR - res == null");
-                    player.sendMessage(Louise.commandError());
+                    player.sendMessage(LouiseModeration.commandError());
                     Database.close();
                     return false;
                 }
 
                 if (!res.next()) {
 
-                    player.sendMessage(Louise.playerNotFound());
+                    player.sendMessage(LouiseModeration.playerNotFound());
                     return false;
                 }
 

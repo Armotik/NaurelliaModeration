@@ -1,6 +1,6 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.ChatFilter;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,7 +15,7 @@ public class ChatFilterCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
-        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/chatfilter <enable|disable|edit>")));
 
         Logger logger = Logger.getLogger(ChatFilterCommand.class.getName());
@@ -28,7 +28,7 @@ public class ChatFilterCommand implements CommandExecutor {
         if (strings[0].equalsIgnoreCase("enable")) {
             if (ChatFilter.getChatFilterEnabled()) {
 
-                commandSender.sendMessage(Louise.getName() + "§cChatFilter is already enabled");
+                commandSender.sendMessage(LouiseModeration.getName() + "§cChatFilter is already enabled");
                 return false;
             }
 
@@ -40,7 +40,7 @@ public class ChatFilterCommand implements CommandExecutor {
         if (strings[0].equalsIgnoreCase("disable")) {
             if (!ChatFilter.getChatFilterEnabled()) {
 
-                commandSender.sendMessage(Louise.getName() + "§cChatFilter is already disabled");
+                commandSender.sendMessage(LouiseModeration.getName() + "§cChatFilter is already disabled");
                 return false;
             }
 
@@ -65,12 +65,12 @@ public class ChatFilterCommand implements CommandExecutor {
 
                     if (ChatFilter.getBlackListedWords().contains(strings[3])) {
 
-                        commandSender.sendMessage(Louise.getName() + "§cThis word is already blacklisted");
+                        commandSender.sendMessage(LouiseModeration.getName() + "§cThis word is already blacklisted");
                         return false;
                     }
 
                     ChatFilter.getBlackListedWords().add(strings[3]);
-                    commandSender.sendMessage(Louise.getName() + "§aThe word §e" + strings[3] + " §ahas been added to the blacklist");
+                    commandSender.sendMessage(LouiseModeration.getName() + "§aThe word §e" + strings[3] + " §ahas been added to the blacklist");
 
                     logger.info("Word " + strings[3] + " added to the blacklist by " + commandSender.getName());
                 }
@@ -79,12 +79,12 @@ public class ChatFilterCommand implements CommandExecutor {
 
                     if (!ChatFilter.getBlackListedWords().contains(strings[3])) {
 
-                        commandSender.sendMessage(Louise.getName() + "§cThis word is not blacklisted");
+                        commandSender.sendMessage(LouiseModeration.getName() + "§cThis word is not blacklisted");
                         return false;
                     }
 
                     ChatFilter.getBlackListedWords().remove(strings[3]);
-                    commandSender.sendMessage(Louise.getName() + "§aThe word §e" + strings[3] + " §ahas been removed from the blacklist");
+                    commandSender.sendMessage(LouiseModeration.getName() + "§aThe word §e" + strings[3] + " §ahas been removed from the blacklist");
 
                     logger.info("Word " + strings[3] + " removed from the blacklist by " + commandSender.getName());
                 }
@@ -92,7 +92,7 @@ public class ChatFilterCommand implements CommandExecutor {
 
             if (strings[1].equalsIgnoreCase("whitelist")) {
 
-                commandSender.sendMessage(Louise.getName() + "§cThis feature is not available yet");
+                commandSender.sendMessage(LouiseModeration.getName() + "§cThis feature is not available yet");
             }
         }
 

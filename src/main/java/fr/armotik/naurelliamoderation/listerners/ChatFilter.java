@@ -1,15 +1,14 @@
 package fr.armotik.naurelliamoderation.listerners;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.NaurelliaModeration;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -80,7 +79,7 @@ public class ChatFilter implements Listener {
         if (!SanctionsManager.getBannedFromChat().isEmpty() && SanctionsManager.getBannedFromChat().containsKey(event.getPlayer().getUniqueId())) {
 
             event.setCancelled(true);
-            TextComponent msg = new TextComponent(Louise.getName() + "§cYou're muted, you can't speak in the chat !");
+            TextComponent msg = new TextComponent(LouiseModeration.muted());
             msg.setHoverEvent(new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
             ));
@@ -101,7 +100,7 @@ public class ChatFilter implements Listener {
         if (SanctionsManager.getBannedFromChat().containsKey(player.getUniqueId())) {
 
             event.setCancelled(true);
-            TextComponent msg = new TextComponent(Louise.getName() + "§cYou're muted, you can't speak in the chat !");
+            TextComponent msg = new TextComponent(LouiseModeration.muted());
             msg.setHoverEvent(new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
             ));
@@ -118,7 +117,7 @@ public class ChatFilter implements Listener {
             if (!player.hasPermission("naurellia.staff.helper") && message.toLowerCase(Locale.ENGLISH).contains(word) && ChatFilter.chatFilterEnabled) {
 
                 event.setCancelled(true);
-                TextComponent msg = new TextComponent(Louise.chatFilter());
+                TextComponent msg = new TextComponent(LouiseModeration.chatFilter());
                 msg.setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
                 ));
@@ -146,7 +145,7 @@ public class ChatFilter implements Listener {
             if (caps > message.length() / 2 && !player.hasPermission("naurellia.staff.helper")) {
 
                 event.setCancelled(true);
-                TextComponent msg = new TextComponent(Louise.getName() + "§cToo many caps in your message !");
+                TextComponent msg = new TextComponent(LouiseModeration.tooManyCaps());
                 msg.setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
                 ));
@@ -199,7 +198,7 @@ public class ChatFilter implements Listener {
             ) {
 
                 event.setCancelled(true);
-                TextComponent msg = new TextComponent(Louise.getName() + "§cYou can't send links in the chat !");
+                TextComponent msg = new TextComponent(LouiseModeration.unauthorizedLink());
                 msg.setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
                 ));

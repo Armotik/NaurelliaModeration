@@ -1,6 +1,6 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.EventManager;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,7 +18,7 @@ public class UnFreezeCommand implements CommandExecutor {
         if (!(commandSender instanceof Player)) return false;
 
         if (strings.length == 0) {
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unfreeze <player>")));
 
             commandSender.spigot().sendMessage(msg);
@@ -28,7 +28,7 @@ public class UnFreezeCommand implements CommandExecutor {
         Player target = Bukkit.getServer().getPlayer(strings[0]);
 
         if (target == null) {
-            TextComponent msg = new TextComponent(Louise.playerNotFound());
+            TextComponent msg = new TextComponent(LouiseModeration.playerNotFound());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cPlayer §7: §c" + strings[0] + " §cnot found")));
 
             commandSender.spigot().sendMessage(msg);
@@ -36,13 +36,13 @@ public class UnFreezeCommand implements CommandExecutor {
         }
 
         if (!EventManager.getFrozen().containsKey(target.getUniqueId())) {
-            commandSender.sendMessage(Louise.getName() + "§cThis player is not frozen");
+            commandSender.sendMessage(LouiseModeration.getName() + "§cThis player is not frozen");
             return false;
         }
 
         EventManager.getFrozen().remove(target.getUniqueId());
 
-        commandSender.sendMessage(Louise.getName() + "§aYou have unfrozen §e" + target.getName());
+        commandSender.sendMessage(LouiseModeration.getName() + "§aYou have unfrozen §e" + target.getName());
 
         return true;
     }

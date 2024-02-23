@@ -1,9 +1,10 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utilsclasses.Report;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,7 @@ public class ReportsCommand implements CommandExecutor {
         Player player = (Player) commandSender;
 
         if (Report.getReports() == null || Report.getReports().isEmpty()) {
-            player.sendMessage(Louise.getName() + "§cNo reports found");
+            player.sendMessage(LouiseModeration.getName() + "§cNo reports found");
             return false;
         }
 
@@ -33,7 +34,7 @@ public class ReportsCommand implements CommandExecutor {
         }
 
         if (allTreated) {
-            player.sendMessage(Louise.getName() + "§cAll reports are treated");
+            player.sendMessage(LouiseModeration.getName() + "§cAll reports are treated");
             return false;
         }
 
@@ -46,7 +47,7 @@ public class ReportsCommand implements CommandExecutor {
             }
         } catch (NumberFormatException e) {
             ExceptionsManager.numberFormatExceptionLog(e);
-            player.sendMessage(Louise.getName() + "§cInvalid page number §7: §c" + strings[0]);
+            player.sendMessage(LouiseModeration.getName() + "§cInvalid page number §7: §c" + strings[0]);
             return false;
         }
 

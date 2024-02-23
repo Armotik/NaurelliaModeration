@@ -3,7 +3,7 @@ package fr.armotik.naurelliamoderation.guis;
 import fr.armotik.naurelliamoderation.listerners.ConnectionsManager;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

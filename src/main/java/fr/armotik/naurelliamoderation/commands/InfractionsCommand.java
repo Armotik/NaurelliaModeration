@@ -1,9 +1,10 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
+
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -18,8 +19,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -34,7 +33,7 @@ public class InfractionsCommand implements CommandExecutor {
         Player player = ((Player) commandSender).getPlayer();
 
         if (strings.length == 0) {
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/infractions <player>")));
 
             commandSender.spigot().sendMessage(msg);
@@ -52,7 +51,7 @@ public class InfractionsCommand implements CommandExecutor {
                 if (res == null) {
 
                     assert player != null;
-                    player.sendMessage(Louise.commandError());
+                    player.sendMessage(LouiseModeration.commandError());
                     logger.warning("[NaurelliaModeration] -> InfractionsCommand : onCommand ERROR - res == null");
                     return false;
                 }
@@ -60,7 +59,7 @@ public class InfractionsCommand implements CommandExecutor {
                 if (!res.next()) {
 
                     assert player != null;
-                    player.sendMessage(Louise.playerNotFound());
+                    player.sendMessage(LouiseModeration.playerNotFound());
                     return false;
                 }
 

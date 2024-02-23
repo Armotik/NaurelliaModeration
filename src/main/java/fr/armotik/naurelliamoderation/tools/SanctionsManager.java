@@ -1,10 +1,11 @@
 package fr.armotik.naurelliamoderation.tools;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.utiles.FilesReader;
+import fr.armotik.louise.utiles.ExceptionsManager;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -105,7 +106,7 @@ public class SanctionsManager implements Listener {
         if (req <= 0) {
 
             if (staff != null) {
-                staff.sendMessage(Louise.commandError());
+                staff.sendMessage(LouiseModeration.commandError());
             }
 
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : warn ERROR - req <= 0");
@@ -113,7 +114,7 @@ public class SanctionsManager implements Listener {
             return;
         }
 
-        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been warned for : §a" + reason + "\n§6|-------------------+====+-------------------|");
+        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been warned for : §a" + reason + "\n§6|-------------------+====+-------------------|");
         msg.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
         ));
@@ -126,7 +127,7 @@ public class SanctionsManager implements Listener {
          */
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
-            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been warned for : §a" + reason + "\n§6|-------------------+====+-------------------|");
+            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been warned for : §a" + reason + "\n§6|-------------------+====+-------------------|");
 
         } else {
 
@@ -135,7 +136,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully warned");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully warned");
         }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).getName() + " has been warned by : " + staff.getName() + " for : " + reason);
@@ -185,7 +186,7 @@ public class SanctionsManager implements Listener {
         if (req <= 0) {
 
             if (staff != null) {
-                staff.sendMessage(Louise.commandError());
+                staff.sendMessage(LouiseModeration.commandError());
             }
 
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : " + "[NaurelliaModeration] -> SanctionManager : tempmute ERROR - req <= 0");
@@ -201,14 +202,14 @@ public class SanctionsManager implements Listener {
             ExceptionsManager.parseExceptionLog(e);
 
             if (staff != null) {
-                staff.sendMessage(Louise.commandError());
+                staff.sendMessage(LouiseModeration.commandError());
             }
 
             Database.close();
             return;
         }
 
-        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been muted for : §a" + reason + "\n§cUNMUTE DATE : §f§l" + DATE_FORMAT.format(unMuteDate) + "\n§6|-------------------+====+-------------------|");
+        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been muted for : §a" + reason + "\n§cUNMUTE DATE : §f§l" + DATE_FORMAT.format(unMuteDate) + "\n§6|-------------------+====+-------------------|");
         msg.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
         ));
@@ -221,7 +222,7 @@ public class SanctionsManager implements Listener {
          */
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
-            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been muted for : §a" + reason + "\n§cUNMUTE DATE : §f§l" + DATE_FORMAT.format(unMuteDate) + "\n§6|-------------------+====+-------------------|");
+            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been muted for : §a" + reason + "\n§cUNMUTE DATE : §f§l" + DATE_FORMAT.format(unMuteDate) + "\n§6|-------------------+====+-------------------|");
         } else {
 
             Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
@@ -230,7 +231,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully muted");
         }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).getName() + " has been muted by : " + staff.getName() + " until " + DATE_FORMAT.format(unMuteDate) + " for : " + reason);
@@ -259,7 +260,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : mute ERROR - req <= 0");
             Database.close();
             return;
@@ -269,7 +270,7 @@ public class SanctionsManager implements Listener {
 
         bannedFromChat.put(targetUUID, null);
 
-        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been muted for : §a" + reason + "\n§6|-------------------+====+-------------------|");
+        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been muted for : §a" + reason + "\n§6|-------------------+====+-------------------|");
         msg.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
         ));
@@ -282,8 +283,8 @@ public class SanctionsManager implements Listener {
          */
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
-            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou have been muted for : §a" + reason + "\n§6|-------------------+====+-------------------|");
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou have been muted for : §a" + reason + "\n§6|-------------------+====+-------------------|");
+            staff.sendMessage(LouiseModeration.getName()+ "§aPlayer successfully muted");
             logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been muted by : " + staff.getName() + " for : " + reason);
 
             Database.close();
@@ -292,7 +293,7 @@ public class SanctionsManager implements Listener {
 
         Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
 
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+        staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully muted");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).getName() + " has been muted by : " + staff.getName() + " for : " + reason);
 
@@ -313,7 +314,7 @@ public class SanctionsManager implements Listener {
         If the target is not online
          */
         if (!target.isOnline()) {
-            staff.sendMessage(Louise.playerNotFound());
+            staff.sendMessage(LouiseModeration.playerNotFound());
             return;
         }
 
@@ -338,7 +339,7 @@ public class SanctionsManager implements Listener {
         if (req <= 0) {
 
             if (staff != null) {
-                staff.sendMessage(Louise.commandError());
+                staff.sendMessage(LouiseModeration.commandError());
             }
 
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : kick ERROR - req <= 0");
@@ -350,7 +351,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully kicked");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully kicked");
             logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " has been kicked by " + staff.getName() + " for " + reason);
         }
 
@@ -387,7 +388,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : tempban ERROR - req <= 0");
             Database.close();
             return;
@@ -405,7 +406,7 @@ public class SanctionsManager implements Listener {
         ProfileBanList profileBanList = Bukkit.getBanList(BanList.Type.PROFILE);
         PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
         profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n§cUNBAN DATE : §f§l" + LOCAL_DATE.format(FORMATTER) + "\n\n§cYou can appeal your ban in our Discord", unBanDays, staff.getName());
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully banned for : " + banDays + " days");
+        staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully banned for : " + banDays + " days");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been banned until " + LOCAL_DATE.format(FORMATTER) + " by : " + staff.getName() + " for : " + reason);
 
@@ -433,7 +434,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : ban ERROR - req <= 0");
             Database.close();
             return;
@@ -452,7 +453,7 @@ public class SanctionsManager implements Listener {
         PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
         profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", (Date) null, staff.getName());
 
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully banned");
+        staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully banned");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been banned " + " by : " + staff.getName() + " for : " + reason);
 
@@ -480,7 +481,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : banip ERROR - req <= 0");
             Database.close();
             return;
@@ -499,7 +500,7 @@ public class SanctionsManager implements Listener {
         PlayerProfile playerProfile = Bukkit.getOfflinePlayer(targetUUID).getPlayerProfile();
         profileBanList.addBan(playerProfile, "\n\n§cBAN REASON : §f§l" + reason + "\n\n§cYou can appeal your ban in our Discord", (Date) null, staff.getName());
 
-        staff.sendMessage(Louise.getName() + "§aPlayer successfully banned-ip");
+        staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully banned-ip");
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been banned-ip " + " by : " + staff.getName() + " for : " + reason);
 
@@ -519,7 +520,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unmute ERROR - req <= 0");
             Database.close();
             return;
@@ -527,7 +528,7 @@ public class SanctionsManager implements Listener {
 
         bannedFromChat.remove(targetUUID);
 
-        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou're now unmuted\n§6|-------------------+====+-------------------|");
+        TextComponent msg = new TextComponent("§6|-------------------+====+-------------------| \n" + LouiseModeration.getName()+ "§cYou're now unmuted\n§6|-------------------+====+-------------------|");
         msg.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, new Text("§cPlease refer to our rules")
         ));
@@ -540,8 +541,8 @@ public class SanctionsManager implements Listener {
          */
         if (!Bukkit.getOfflinePlayer(targetUUID).isOnline()) {
 
-            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + Louise.getName() + "§cYou are now unmuted" + "\n§6|-------------------+====+-------------------|");
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully muted");
+            offlineInfractionMessages.put(targetUUID, "§6|-------------------+====+-------------------| \n" + LouiseModeration.getName() + "§cYou are now unmuted" + "\n§6|-------------------+====+-------------------|");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully muted");
             logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + Bukkit.getOfflinePlayer(targetUUID).getName() + " has been unmuted");
 
             Database.close();
@@ -550,7 +551,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully unmuted");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully unmuted");
         }
 
         Objects.requireNonNull(Bukkit.getPlayer(targetUUID)).spigot().sendMessage(msg);
@@ -572,7 +573,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            staff.sendMessage(Louise.commandError());
+            staff.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : unban ERROR - req <= 0");
             Database.close();
             return;
@@ -584,7 +585,7 @@ public class SanctionsManager implements Listener {
 
         if (staff != null) {
 
-            staff.sendMessage(Louise.getName() + "§aPlayer successfully unbanned");
+            staff.sendMessage(LouiseModeration.getName() + "§aPlayer successfully unbanned");
         }
 
         logger.log(Level.INFO, "[NaurelliaModeration] -> SanctionManager : " + target.getName() + " is now unbanned");
@@ -616,7 +617,7 @@ public class SanctionsManager implements Listener {
                         !report.isTreated() &&
                         !reporter.hasPermission("naurellia.staff.helper")) {
 
-                    reporter.sendMessage(Louise.getName() + "§cPlease wait 1h before reporting this player again");
+                    reporter.sendMessage(LouiseModeration.getName() + "§cPlease wait 1h before reporting this player again");
                     return;
                 }
             }
@@ -626,7 +627,7 @@ public class SanctionsManager implements Listener {
 
         if (req <= 0) {
 
-            reporter.sendMessage(Louise.commandError());
+            reporter.sendMessage(LouiseModeration.commandError());
             logger.log(Level.WARNING, "[NaurelliaModeration] -> SanctionManager : report ERROR - req <= 0");
             Database.close();
             return;
@@ -634,13 +635,13 @@ public class SanctionsManager implements Listener {
 
         new Report(reporter.getUniqueId(), target.getUniqueId(), reason, LOCAL_DATE.format(FORMATTER), false);
 
-        reporter.sendMessage(Louise.getName() + "§aPlayer successfully reported");
+        reporter.sendMessage(LouiseModeration.getName() + "§aPlayer successfully reported");
 
         for (Player staff : Bukkit.getOnlinePlayers()) {
 
             if (staff.hasPermission("naurellia.staff.helper")) {
 
-                staff.sendMessage(Louise.getName() + " §7» §c" + reporter.getName() + " §7reported §c" + target.getName() + " §7for §c" + reason + "§7.");
+                staff.sendMessage(LouiseModeration.getName() + " §7» §c" + reporter.getName() + " §7reported §c" + target.getName() + " §7for §c" + reason + "§7.");
             }
         }
 

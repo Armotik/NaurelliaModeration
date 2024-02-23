@@ -1,13 +1,12 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,7 +17,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +46,7 @@ public class UnBanCommand implements CommandExecutor {
          */
         if (args.length < 1) {
 
-            TextComponent msg = new TextComponent(Louise.wrongCommand());
+            TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
 
             sender.spigot().sendMessage(msg);
@@ -73,7 +71,7 @@ public class UnBanCommand implements CommandExecutor {
 
                     if (!res.next()) {
 
-                        TextComponent msg = new TextComponent(Louise.playerNotFound());
+                        TextComponent msg = new TextComponent(LouiseModeration.playerNotFound());
                         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
 
                         sender.spigot().sendMessage(msg);
@@ -86,7 +84,7 @@ public class UnBanCommand implements CommandExecutor {
 
                     if (!Bukkit.getOfflinePlayer(targetUUID).isBanned()) {
 
-                            TextComponent msg = new TextComponent(Louise.getName() + " §7» §c" + args[0] + " §cis not banned.");
+                            TextComponent msg = new TextComponent(LouiseModeration.getName() + " §7» §c" + args[0] + " §cis not banned.");
                             msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/unban <player>")));
 
                             sender.spigot().sendMessage(msg);

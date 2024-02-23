@@ -1,9 +1,9 @@
 package fr.armotik.naurelliamoderation.guis;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import fr.armotik.naurelliamoderation.listerners.GuiManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class ItemsInfractionsGui {
                 if (res == null) {
 
                     player.getOpenInventory().close();
-                    player.sendMessage(Louise.commandError());
+                    player.sendMessage(LouiseModeration.commandError());
 
                     logger.warning("[NaurelliaModeration] -> ItemsInfractionsGui : infractionsGui ERROR - req <= 0");
                     return;

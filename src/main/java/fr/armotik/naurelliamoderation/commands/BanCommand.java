@@ -1,9 +1,9 @@
 package fr.armotik.naurelliamoderation.commands;
 
-import fr.armotik.naurelliamoderation.Louise;
+import fr.armotik.louise.louise.LouiseModeration;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
 import fr.armotik.naurelliamoderation.utiles.Database;
-import fr.armotik.naurelliamoderation.utiles.ExceptionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -19,11 +19,18 @@ import java.util.logging.Logger;
 
 public class BanCommand {
 
+    /**
+     * Ban command
+     *
+     * @param player player
+     * @param args   args
+     * @param ip     ip (true if ip ban)
+     */
     public BanCommand(Player player, String[] args, boolean ip) {
 
         Logger logger = Logger.getLogger(BanCommand.class.getName());
 
-        TextComponent msg = new TextComponent(Louise.wrongCommand());
+        TextComponent msg = new TextComponent(LouiseModeration.wrongCommand());
         msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§cCommand §7: §c/ban<ip> <player> <reason>")));
 
         assert player != null;
@@ -46,7 +53,7 @@ public class BanCommand {
             assert conn != null;
             try (Statement statement = conn.createStatement();
                  ResultSet result = statement.executeQuery("SELECT uuid FROM Players WHERE ign = '" + args[0] + "'");
-            ){
+            ) {
 
                 if (result == null) {
 

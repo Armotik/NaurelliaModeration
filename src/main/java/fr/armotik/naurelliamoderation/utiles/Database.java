@@ -3,13 +3,13 @@ package fr.armotik.naurelliamoderation.utiles;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import fr.armotik.naurelliamoderation.NaurelliaModeration;
+import fr.armotik.louise.utiles.ExceptionsManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

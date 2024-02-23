@@ -4,6 +4,7 @@ import fr.armotik.naurelliamoderation.listerners.ChatFilter;
 import fr.armotik.naurelliamoderation.listerners.ConnectionsManager;
 import fr.armotik.naurelliamoderation.utilsclasses.Report;
 import fr.armotik.naurelliamoderation.tools.SanctionsManager;
+import fr.armotik.louise.utiles.ExceptionsManager;
 
 import java.io.*;
 import java.net.InetAddress;
